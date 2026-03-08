@@ -3,7 +3,7 @@ import { bookings } from '@/data/mock';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, MapPin, Clock, Calendar, User, Phone, CheckCircle, Circle } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Calendar, User, CheckCircle, Circle, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const steps = [
@@ -50,7 +50,6 @@ const BookingTrackingPage = () => {
           </div>
 
           <div className="p-6">
-            {/* Tracking Steps */}
             {!isCancelled && (
               <div className="mb-6">
                 <h2 className="mb-4 font-semibold text-foreground">Tracking</h2>
@@ -94,7 +93,6 @@ const BookingTrackingPage = () => {
               </div>
             )}
 
-            {/* Booking Details */}
             <h2 className="mb-3 font-semibold text-foreground">Booking Details</h2>
             <div className="space-y-3 rounded-lg bg-muted/50 p-4">
               <div className="flex items-center gap-2 text-sm">
@@ -124,9 +122,16 @@ const BookingTrackingPage = () => {
                 <p className="text-sm text-muted-foreground">Total Amount</p>
                 <p className="text-xl font-bold text-foreground">₹{booking.price}</p>
               </div>
-              {booking.status === 'completed' && (
-                <Badge className="bg-success/10 text-success border-success/30">Paid</Badge>
-              )}
+              <div className="flex items-center gap-2">
+                {booking.status === 'completed' && (
+                  <>
+                    <Badge className="bg-success/10 text-success border-success/30">Paid</Badge>
+                    <Button size="sm" variant="outline" className="gap-1" onClick={() => navigate('/review')}>
+                      <Star className="h-3.5 w-3.5" /> Rate Service
+                    </Button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </Card>

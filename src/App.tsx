@@ -14,13 +14,20 @@ import PaymentBookingPage from "@/pages/PaymentBookingPage";
 import BookingTrackingPage from "@/pages/BookingTrackingPage";
 import UserBookingsPage from "@/pages/UserBookingsPage";
 import ProfilePage from "@/pages/ProfilePage";
+import ReviewPage from "@/pages/ReviewPage";
+import HelpSupportPage from "@/pages/HelpSupportPage";
+import AboutPage from "@/pages/AboutPage";
 import ProviderDashboard from "@/pages/ProviderDashboard";
 import ProviderJobsPage from "@/pages/ProviderJobsPage";
 import ProviderAvailabilityPage from "@/pages/ProviderAvailabilityPage";
+import ProviderEarningsPage from "@/pages/ProviderEarningsPage";
+import ProviderReviewsPage from "@/pages/ProviderReviewsPage";
 import AdminDashboard from "@/pages/AdminDashboard";
 import AdminUsersPage from "@/pages/AdminUsersPage";
 import AdminServicesPage from "@/pages/AdminServicesPage";
+import AdminCategoriesPage from "@/pages/AdminCategoriesPage";
 import AdminBookingsPage from "@/pages/AdminBookingsPage";
+import AdminSettingsPage from "@/pages/AdminSettingsPage";
 import LoginPage from "@/pages/LoginPage";
 import SignupPage from "@/pages/SignupPage";
 import NotFound from "@/pages/NotFound";
@@ -55,7 +62,9 @@ const AppRoutes = () => {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsersPage />} />
             <Route path="/admin/services" element={<AdminServicesPage />} />
+            <Route path="/admin/categories" element={<AdminCategoriesPage />} />
             <Route path="/admin/bookings" element={<AdminBookingsPage />} />
+            <Route path="/admin/settings" element={<AdminSettingsPage />} />
             <Route path="/" element={<Navigate to="/admin" />} />
             <Route path="*" element={<Navigate to="/admin" />} />
           </Routes>
@@ -73,6 +82,8 @@ const AppRoutes = () => {
           <Routes>
             <Route path="/provider" element={<ProviderDashboard />} />
             <Route path="/provider/jobs" element={<ProviderJobsPage />} />
+            <Route path="/provider/earnings" element={<ProviderEarningsPage />} />
+            <Route path="/provider/reviews" element={<ProviderReviewsPage />} />
             <Route path="/provider/availability" element={<ProviderAvailabilityPage />} />
             <Route path="/provider/profile" element={<ProfilePage />} />
             <Route path="/" element={<Navigate to="/provider" />} />
@@ -95,6 +106,9 @@ const AppRoutes = () => {
           <Route path="/book/:serviceId" element={<PaymentBookingPage />} />
           <Route path="/bookings" element={<UserBookingsPage />} />
           <Route path="/track/:bookingId" element={<BookingTrackingPage />} />
+          <Route path="/review" element={<ReviewPage />} />
+          <Route path="/help" element={<HelpSupportPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

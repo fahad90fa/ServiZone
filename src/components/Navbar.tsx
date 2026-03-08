@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { UserRole } from '@/types';
-import { Home, Calendar, User, LogOut, Shield, Wrench, ChevronDown, Menu, X, Clock } from 'lucide-react';
+import { Home, Calendar, User, LogOut, Shield, Wrench, ChevronDown, Menu, X, Clock, DollarSign, Star, HelpCircle, Info, Settings, FolderOpen } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import NotificationBell from '@/components/NotificationBell';
@@ -15,27 +15,32 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + '/');
 
   const navLinks = currentUser?.role === 'admin'
     ? [
         { to: '/admin', label: 'Dashboard', icon: Home },
         { to: '/admin/users', label: 'Users', icon: User },
         { to: '/admin/services', label: 'Services', icon: Wrench },
+        { to: '/admin/categories', label: 'Categories', icon: FolderOpen },
         { to: '/admin/bookings', label: 'Bookings', icon: Calendar },
+        { to: '/admin/settings', label: 'Settings', icon: Settings },
       ]
     : currentUser?.role === 'provider'
     ? [
         { to: '/provider', label: 'Dashboard', icon: Home },
         { to: '/provider/jobs', label: 'Jobs', icon: Calendar },
+        { to: '/provider/earnings', label: 'Earnings', icon: DollarSign },
+        { to: '/provider/reviews', label: 'Reviews', icon: Star },
         { to: '/provider/availability', label: 'Availability', icon: Clock },
         { to: '/provider/profile', label: 'Profile', icon: User },
       ]
     : [
         { to: '/', label: 'Home', icon: Home },
         { to: '/services', label: 'Services', icon: Wrench },
-        { to: '/bookings', label: 'My Bookings', icon: Calendar },
+        { to: '/bookings', label: 'Bookings', icon: Calendar },
         { to: '/profile', label: 'Profile', icon: User },
+        { to: '/help', label: 'Help', icon: HelpCircle },
       ];
 
   return (
@@ -51,8 +56,8 @@ const Navbar = () => {
         <div className="hidden items-center gap-1 md:flex">
           {navLinks.map(link => (
             <Link key={link.to} to={link.to}>
-              <Button variant={isActive(link.to) ? 'default' : 'ghost'} size="sm" className="gap-2">
-                <link.icon className="h-4 w-4" />
+              <Button variant={isActive(link.to) && link.to !== '/' ? 'default' : location.pathname === link.to ? 'default' : 'ghost'} size="sm" className="gap-1.5 text-xs">
+                <link.icon className="h-3.5 w-3.5" />
                 {link.label}
               </Button>
             </Link>
