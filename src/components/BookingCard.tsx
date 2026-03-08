@@ -1,8 +1,9 @@
-import { Booking } from '@/types';
+import { Booking } from '@/hooks/useBookings';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, MapPin, DollarSign } from 'lucide-react';
+import { Calendar, Clock, MapPin, IndianRupee } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   pending: { label: 'Pending', className: 'bg-warning/10 text-warning border-warning/30' },
@@ -17,64 +18,70 @@ interface BookingCardProps {
   showActions?: boolean;
   onAccept?: (id: string) => void;
   onReject?: (id: string) => void;
-  onUpdateStatus?: (id: string, status: Booking['status']) => void;
+  onUpdateStatus?: (id: string, status: string) => void;
   perspective?: 'user' | 'provider' | 'admin';
 }
 
 const BookingCard = ({ booking, showActions, onAccept, onReject, onUpdateStatus, perspective = 'user' }: BookingCardProps) => {
-  const status = statusConfig[booking.status];
+  const status = statusConfig[booking.status] || statusConfig.pending;
 
   return (
-    <Card className="overflow-hidden border border-border shadow-card transition-all hover:shadow-elevated">
-      <div className="p-5">
-        <div className="mb-3 flex items-start justify-between">
-          <div>
-            <h3 className="font-semibold text-foreground">{booking.serviceName}</h3>
-            <p className="text-sm text-muted-foreground">
-              {perspective === 'user' ? `Provider: ${booking.providerName}` : `Customer: ${booking.userName}`}
-            </p>
-          </div>
-          <Badge variant="outline" className={status.className}>{status.label}</Badge>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5" />
-            {booking.date}
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5" />
-            {booking.time}
-          </div>
-          <div className="col-span-2 flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5" />
-            {booking.address}
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-          <div className="flex items-center gap-1 font-semibold text-foreground">
-            <DollarSign className="h-4 w-4" />
-            ₹{booking.price}
-          </div>
-
-          {showActions && booking.status === 'pending' && (
-            <div className="flex gap-2">
-              {onAccept && <Button size="sm" onClick={() => onAccept(booking.id)}>Accept</Button>}
-              {onReject && <Button size="sm" variant="outline" onClick={() => onReject(booking.id)}>Reject</Button>}
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="overflow-hidden glass border-border/50 shadow-soft hover-lift noise">
+        <div className="p-4 sm:p-5">
+          <div className="mb-3 flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <h3 className="font-sans font-semibold text-foreground truncate">{booking.service_name || 'Service'}</h3>
+              <p className="font-body text-sm text-muted-foreground truncate">
+                {perspective === 'user' ? `Provider assigned` : `Customer: ${booking.user_name || 'User'}`}
+              </p>
             </div>
-          )}
+            <Badge variant="outline" className={`shrink-0 font-body text-xs ${status.className}`}>{status.label}</Badge>
+          </div>
 
-          {showActions && booking.status === 'confirmed' && onUpdateStatus && (
-            <Button size="sm" onClick={() => onUpdateStatus(booking.id, 'in_progress')}>Start Job</Button>
-          )}
+          <div className="grid grid-cols-1 gap-1.5 font-body text-sm text-muted-foreground sm:grid-cols-2">
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5 shrink-0 text-primary/60" />
+              <span className="truncate">{booking.scheduled_date}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5 shrink-0 text-primary/60" />
+              <span>{booking.scheduled_time}</span>
+            </div>
+            <div className="col-span-1 sm:col-span-2 flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-primary/60" />
+              <span className="truncate">{booking.address || 'Address not provided'}</span>
+            </div>
+          </div>
 
-          {showActions && booking.status === 'in_progress' && onUpdateStatus && (
-            <Button size="sm" onClick={() => onUpdateStatus(booking.id, 'completed')}>Complete</Button>
-          )}
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-3">
+            <div className="flex items-center gap-1 font-sans font-semibold text-foreground">
+              <IndianRupee className="h-4 w-4" />
+              {booking.price}
+            </div>
+
+            {showActions && booking.status === 'pending' && (
+              <div className="flex gap-2">
+                {onAccept && <Button size="sm" onClick={() => onAccept(booking.id)} className="gradient-primary border-0 text-primary-foreground font-body text-xs rounded-lg">Accept</Button>}
+                {onReject && <Button size="sm" variant="outline" onClick={() => onReject(booking.id)} className="font-body text-xs rounded-lg">Reject</Button>}
+              </div>
+            )}
+
+            {showActions && booking.status === 'confirmed' && onUpdateStatus && (
+              <Button size="sm" onClick={() => onUpdateStatus(booking.id, 'in_progress')} className="gradient-primary border-0 text-primary-foreground font-body text-xs rounded-lg">Start Job</Button>
+            )}
+
+            {showActions && booking.status === 'in_progress' && onUpdateStatus && (
+              <Button size="sm" onClick={() => onUpdateStatus(booking.id, 'completed')} className="bg-success border-0 text-success-foreground font-body text-xs rounded-lg hover:bg-success/90">Complete</Button>
+            )}
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </motion.div>
   );
 };
 

@@ -1,35 +1,33 @@
-import { useState } from 'react';
-import { bookings as initialBookings } from '@/data/mock';
+import { useBookings, useUpdateBookingStatus } from '@/hooks/useBookings';
 import BookingCard from '@/components/BookingCard';
-import { Booking } from '@/types';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const ProviderJobsPage = () => {
-  const [bookingsList, setBookingsList] = useState(initialBookings.filter(b => b.providerId === 'u3'));
+  const { data: bookings = [], isLoading } = useBookings();
+  const updateStatus = useUpdateBookingStatus();
 
-  const handleAccept = (id: string) => {
-    setBookingsList(prev => prev.map(b => b.id === id ? { ...b, status: 'confirmed' as const } : b));
-    toast.success('Job accepted!');
-  };
+  const handleAccept = (id: string) => updateStatus.mutate({ id, status: 'confirmed' });
+  const handleReject = (id: string) => updateStatus.mutate({ id, status: 'cancelled' });
+  const handleUpdateStatus = (id: string, status: string) => updateStatus.mutate({ id, status });
 
-  const handleReject = (id: string) => {
-    setBookingsList(prev => prev.map(b => b.id === id ? { ...b, status: 'cancelled' as const } : b));
-    toast.info('Job rejected');
-  };
-
-  const handleUpdateStatus = (id: string, status: Booking['status']) => {
-    setBookingsList(prev => prev.map(b => b.id === id ? { ...b, status } : b));
-    toast.success(`Status updated`);
-  };
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
-    <div className="container py-8">
-      <h1 className="mb-2 text-3xl font-bold text-foreground">All Jobs</h1>
-      <p className="mb-6 text-muted-foreground">Manage all assigned jobs</p>
+    <div className="container py-8 sm:py-10">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <h1 className="mb-2 font-sans text-3xl sm:text-4xl font-bold text-foreground">All Jobs</h1>
+        <p className="mb-6 font-body text-muted-foreground">Manage all assigned jobs in real-time</p>
+      </motion.div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {bookingsList.map(booking => (
+      <div className="grid gap-4 sm:grid-cols-2">
+        {bookings.map(booking => (
           <BookingCard
             key={booking.id}
             booking={booking}
@@ -41,6 +39,10 @@ const ProviderJobsPage = () => {
           />
         ))}
       </div>
+
+      {bookings.length === 0 && (
+        <div className="py-20 text-center font-body text-muted-foreground">No jobs assigned yet.</div>
+      )}
     </div>
   );
 };
