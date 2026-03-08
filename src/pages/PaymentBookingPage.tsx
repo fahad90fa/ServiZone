@@ -8,9 +8,33 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar, Clock, MapPin, Star, ArrowLeft, CheckCircle, CreditCard, Smartphone, Building, Loader2 } from 'lucide-react';
+import { Calendar, Clock, MapPin, Star, ChevronRight, CheckCircle, CreditCard, Smartphone, Building, Loader2, Shield, ArrowLeft, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+
+const categoryImages: Record<string, string> = {
+  cleaning: '/images/cleaning.jpg',
+  plumbing: '/images/plumbing.jpg',
+  electrical: '/images/electrical.jpg',
+  painting: '/images/painting.jpg',
+  'pest control': '/images/pest-control.jpg',
+  'appliance repair': '/images/appliance-repair.jpg',
+};
+
+const getServiceImage = (service: any): string => {
+  if (service.image_url && service.image_url.length > 5) return service.image_url;
+  const catName = (service.category_name || '').toLowerCase();
+  for (const [key, val] of Object.entries(categoryImages)) {
+    if (catName.includes(key)) return val;
+  }
+  const sName = (service.name || '').toLowerCase();
+  for (const [key, val] of Object.entries(categoryImages)) {
+    if (sName.includes(key)) return val;
+  }
+  return '/images/cleaning.jpg';
+};
+
+const steps = ['Schedule', 'Payment', 'Done'];
 
 const PaymentBookingPage = () => {
   const { serviceId } = useParams();
@@ -37,6 +61,8 @@ const PaymentBookingPage = () => {
 
   const tax = Math.round(Number(service.price) * 0.18);
   const total = Number(service.price) + tax;
+  const stepIdx = { details: 0, payment: 1, success: 2 }[step];
+  const imageUrl = getServiceImage(service);
 
   const handleDetailsSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +76,6 @@ const PaymentBookingPage = () => {
   const handlePayment = async () => {
     if (!currentUser) return;
     setProcessing(true);
-
     try {
       await createBooking.mutateAsync({
         user_id: currentUser.id,
@@ -62,7 +87,7 @@ const PaymentBookingPage = () => {
         notes: form.notes || undefined,
       });
       setStep('success');
-      toast.success('Payment successful! Booking confirmed.');
+      toast.success('Booking confirmed!');
     } catch {
       toast.error('Failed to create booking');
     } finally {
@@ -71,188 +96,349 @@ const PaymentBookingPage = () => {
   };
 
   return (
-    <div className="container max-w-2xl py-8 sm:py-10 px-4">
-      <Button variant="ghost" className="mb-4 gap-2 font-body rounded-lg" onClick={() => step === 'details' ? navigate(-1) : step === 'payment' ? setStep('details') : null}>
-        <ArrowLeft className="h-4 w-4" /> {step === 'payment' ? 'Back to details' : 'Back'}
-      </Button>
+    <div className="container max-w-5xl py-6 pb-16">
+      {/* Breadcrumb */}
+      <motion.div
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+        className="mb-6 flex items-center gap-2 font-body text-sm text-muted-foreground"
+      >
+        <span className="cursor-pointer hover:text-foreground transition-colors" onClick={() => navigate('/')}>Home</span>
+        <ChevronRight className="h-3 w-3" />
+        <span className="cursor-pointer hover:text-foreground transition-colors" onClick={() => navigate('/services')}>Services</span>
+        <ChevronRight className="h-3 w-3" />
+        <span className="cursor-pointer hover:text-foreground transition-colors" onClick={() => navigate(`/service/${service.id}`)}>{service.name}</span>
+        <ChevronRight className="h-3 w-3" />
+        <span className="text-foreground">Book</span>
+      </motion.div>
 
-      {/* Progress bar */}
-      <div className="mb-6 flex items-center gap-2">
-        {['Details', 'Payment', 'Confirmation'].map((label, i) => {
-          const stepIdx = { details: 0, payment: 1, success: 2 }[step];
-          return (
-            <div key={label} className="flex flex-1 items-center gap-1 sm:gap-2">
-              <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                i <= stepIdx ? 'gradient-primary text-primary-foreground shadow-glow' : 'bg-muted text-muted-foreground'
+      {/* Progress Steps */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.05 }}
+        className="mb-8 flex items-center justify-center gap-0"
+      >
+        {steps.map((label, i) => (
+          <div key={label} className="flex items-center">
+            <div className="flex items-center gap-2">
+              <div className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
+                i < stepIdx ? 'bg-success text-success-foreground' : i === stepIdx ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
               }`}>
-                {i < stepIdx ? '✓' : i + 1}
+                {i < stepIdx ? <CheckCircle className="h-4 w-4" /> : i + 1}
               </div>
-              <span className={`hidden text-xs sm:text-sm sm:block font-body ${i <= stepIdx ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>{label}</span>
-              {i < 2 && <div className={`h-0.5 flex-1 rounded ${i < stepIdx ? 'gradient-primary' : 'bg-border'}`} />}
+              <span className={`hidden sm:block font-body text-sm ${
+                i <= stepIdx ? 'font-medium text-foreground' : 'text-muted-foreground'
+              }`}>{label}</span>
             </div>
-          );
-        })}
-      </div>
+            {i < 2 && <div className={`mx-3 sm:mx-4 h-px w-10 sm:w-16 transition-colors duration-300 ${i < stepIdx ? 'bg-success' : 'bg-border'}`} />}
+          </div>
+        ))}
+      </motion.div>
 
       <AnimatePresence mode="wait">
+        {/* STEP 1: Details */}
         {step === 'details' && (
-          <motion.div key="details" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
-            <Card className="overflow-hidden glass border-border/50 shadow-elevated noise">
-              <div className="gradient-primary p-5 sm:p-6 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(280_78%_60%_/_0.3),transparent_60%)]" />
-                <div className="relative">
-                  <h1 className="font-sans text-lg sm:text-xl font-bold text-primary-foreground">{service.name}</h1>
-                  <div className="mt-2 flex items-center gap-4 font-body text-sm text-primary-foreground/70">
-                    <span className="flex items-center gap-1"><Star className="h-3.5 w-3.5 fill-warning text-warning" /> {service.rating}</span>
-                    <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {service.duration}</span>
+          <motion.div key="details" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.35 }}>
+            <div className="grid gap-6 lg:grid-cols-5">
+              {/* Form */}
+              <div className="lg:col-span-3">
+                <h1 className="font-sans text-xl font-bold text-foreground mb-1">Schedule your service</h1>
+                <p className="font-body text-sm text-muted-foreground mb-5">Choose a date, time, and location that works for you.</p>
+
+                <form onSubmit={handleDetailsSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <Label className="mb-1.5 flex items-center gap-1.5 font-body text-sm text-foreground">
+                        <Calendar className="h-3.5 w-3.5 text-primary" /> Preferred Date <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        type="date"
+                        value={form.date}
+                        onChange={e => setForm({ ...form, date: e.target.value })}
+                        className="bg-secondary/50 border-border font-body rounded-xl h-11"
+                        min={new Date().toISOString().split('T')[0]}
+                      />
+                    </div>
+                    <div>
+                      <Label className="mb-1.5 flex items-center gap-1.5 font-body text-sm text-foreground">
+                        <Clock className="h-3.5 w-3.5 text-primary" /> Preferred Time <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        type="time"
+                        value={form.time}
+                        onChange={e => setForm({ ...form, time: e.target.value })}
+                        className="bg-secondary/50 border-border font-body rounded-xl h-11"
+                      />
+                    </div>
                   </div>
-                </div>
+                  <div>
+                    <Label className="mb-1.5 flex items-center gap-1.5 font-body text-sm text-foreground">
+                      <MapPin className="h-3.5 w-3.5 text-primary" /> Service Address <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      placeholder="e.g. 42, MG Road, Sector 5, Bangalore"
+                      value={form.address}
+                      onChange={e => setForm({ ...form, address: e.target.value })}
+                      className="bg-secondary/50 border-border font-body rounded-xl h-11"
+                    />
+                  </div>
+                  <div>
+                    <Label className="mb-1.5 font-body text-sm text-foreground">Special Instructions</Label>
+                    <Textarea
+                      placeholder="Any details the professional should know..."
+                      value={form.notes}
+                      onChange={e => setForm({ ...form, notes: e.target.value })}
+                      className="bg-secondary/50 border-border font-body rounded-xl min-h-[80px]"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full bg-primary text-primary-foreground font-body rounded-xl h-12 text-sm font-semibold hover:bg-primary/90 transition-all">
+                    Continue to Payment
+                  </Button>
+                </form>
               </div>
-              <form onSubmit={handleDetailsSubmit} className="space-y-4 p-5 sm:p-6">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <Label className="mb-1.5 flex items-center gap-1 font-body text-sm"><Calendar className="h-3.5 w-3.5 text-primary" /> Date *</Label>
-                    <Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} className="bg-background/50 font-body rounded-lg" />
+
+              {/* Service Summary Sidebar */}
+              <div className="lg:col-span-2">
+                <Card className="overflow-hidden border border-border/50 bg-card sticky top-24">
+                  <div className="relative h-36 overflow-hidden">
+                    <img src={imageUrl} alt={service.name} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
                   </div>
-                  <div>
-                    <Label className="mb-1.5 flex items-center gap-1 font-body text-sm"><Clock className="h-3.5 w-3.5 text-primary" /> Time *</Label>
-                    <Input type="time" value={form.time} onChange={e => setForm({ ...form, time: e.target.value })} className="bg-background/50 font-body rounded-lg" />
+                  <div className="p-4 -mt-8 relative">
+                    <h3 className="font-sans text-base font-semibold text-foreground">{service.name}</h3>
+                    <div className="mt-1.5 flex items-center gap-3 font-body text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1"><Star className="h-3 w-3 fill-primary text-primary" /> {service.rating}</span>
+                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {service.duration}</span>
+                    </div>
+
+                    <div className="mt-4 space-y-2 font-body text-sm border-t border-border/50 pt-4">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Service fee</span>
+                        <span className="text-foreground">&#8377;{service.price}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">GST (18%)</span>
+                        <span className="text-foreground">&#8377;{tax}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-border/50 pt-2 font-semibold">
+                        <span className="text-foreground">Total</span>
+                        <span className="text-primary font-sans text-lg">&#8377;{total}</span>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex items-start gap-2 rounded-xl bg-success/5 border border-success/15 p-3">
+                      <Shield className="h-4 w-4 text-success shrink-0 mt-0.5" />
+                      <p className="font-body text-xs text-muted-foreground">Free cancellation up to 4 hours before the scheduled time.</p>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <Label className="mb-1.5 flex items-center gap-1 font-body text-sm"><MapPin className="h-3.5 w-3.5 text-primary" /> Address *</Label>
-                  <Input placeholder="Enter your full address" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} className="bg-background/50 font-body rounded-lg" />
-                </div>
-                <div>
-                  <Label className="mb-1.5 font-body text-sm">Notes (optional)</Label>
-                  <Textarea placeholder="Any special instructions..." value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} className="bg-background/50 font-body rounded-lg" />
-                </div>
-                <Button type="submit" className="w-full gradient-primary border-0 text-primary-foreground shadow-glow font-body rounded-xl">Proceed to Payment</Button>
-              </form>
-            </Card>
+                </Card>
+              </div>
+            </div>
           </motion.div>
         )}
 
+        {/* STEP 2: Payment */}
         {step === 'payment' && (
-          <motion.div key="payment" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-            <div className="grid gap-4 sm:gap-6 md:grid-cols-5">
-              <Card className="glass border-border/50 p-5 sm:p-6 shadow-elevated noise md:col-span-3">
-                <h2 className="mb-4 font-sans text-lg font-semibold text-foreground">Payment Method</h2>
+          <motion.div key="payment" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.35 }}>
+            <div className="grid gap-6 lg:grid-cols-5">
+              <div className="lg:col-span-3">
+                <Button variant="ghost" size="sm" className="mb-4 gap-1.5 font-body text-sm text-muted-foreground hover:text-foreground rounded-lg -ml-2" onClick={() => setStep('details')}>
+                  <ArrowLeft className="h-3.5 w-3.5" /> Back to details
+                </Button>
+                <h1 className="font-sans text-xl font-bold text-foreground mb-1">Choose payment method</h1>
+                <p className="font-body text-sm text-muted-foreground mb-5">All transactions are secure and encrypted.</p>
+
                 <div className="space-y-3">
                   {[
-                    { key: 'card' as const, label: 'Credit/Debit Card', icon: CreditCard, desc: 'Visa, Mastercard, RuPay' },
+                    { key: 'card' as const, label: 'Credit / Debit Card', icon: CreditCard, desc: 'Visa, Mastercard, RuPay' },
                     { key: 'upi' as const, label: 'UPI', icon: Smartphone, desc: 'Google Pay, PhonePe, Paytm' },
-                    { key: 'netbanking' as const, label: 'Net Banking', icon: Building, desc: 'All major banks' },
+                    { key: 'netbanking' as const, label: 'Net Banking', icon: Building, desc: 'All major banks supported' },
                   ].map(method => (
                     <div
                       key={method.key}
-                      className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 sm:p-4 transition-all font-body ${
-                        paymentMethod === method.key ? 'border-primary bg-primary/5 shadow-soft' : 'border-border/60 hover:border-primary/30'
+                      className={`flex cursor-pointer items-center gap-3.5 rounded-xl border p-4 transition-all font-body ${
+                        paymentMethod === method.key
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border/50 hover:border-border'
                       }`}
                       onClick={() => setPaymentMethod(method.key)}
                     >
-                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                        paymentMethod === method.key ? 'bg-primary/10' : 'bg-muted'
+                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                        paymentMethod === method.key ? 'bg-primary/10' : 'bg-secondary'
                       }`}>
                         <method.icon className={`h-5 w-5 ${paymentMethod === method.key ? 'text-primary' : 'text-muted-foreground'}`} />
                       </div>
-                      <div className="min-w-0">
+                      <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground">{method.label}</p>
                         <p className="text-xs text-muted-foreground">{method.desc}</p>
                       </div>
-                      <div className="ml-auto shrink-0">
-                        <div className={`h-4 w-4 rounded-full border-2 ${
-                          paymentMethod === method.key ? 'border-primary bg-primary' : 'border-muted-foreground/30'
-                        }`}>
-                          {paymentMethod === method.key && <div className="m-0.5 h-2 w-2 rounded-full bg-primary-foreground" />}
-                        </div>
+                      <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                        paymentMethod === method.key ? 'border-primary' : 'border-muted-foreground/30'
+                      }`}>
+                        {paymentMethod === method.key && <div className="h-2.5 w-2.5 rounded-full bg-primary" />}
                       </div>
                     </div>
                   ))}
                 </div>
 
-                {paymentMethod === 'card' && (
-                  <div className="mt-4 space-y-3">
-                    <div><Label className="mb-1.5 font-body text-sm">Card Number</Label><Input placeholder="1234 5678 9012 3456" className="bg-background/50 font-body rounded-lg" /></div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div><Label className="mb-1.5 font-body text-sm">Expiry</Label><Input placeholder="MM/YY" className="bg-background/50 font-body rounded-lg" /></div>
-                      <div><Label className="mb-1.5 font-body text-sm">CVV</Label><Input placeholder="123" type="password" className="bg-background/50 font-body rounded-lg" /></div>
+                {/* Card fields */}
+                <AnimatePresence mode="wait">
+                  {paymentMethod === 'card' && (
+                    <motion.div key="card-fields" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
+                      <div className="mt-4 space-y-3 rounded-xl border border-border/50 bg-secondary/20 p-4">
+                        <div>
+                          <Label className="mb-1.5 font-body text-sm text-foreground">Card Number</Label>
+                          <Input placeholder="1234 5678 9012 3456" className="bg-background border-border font-body rounded-xl h-11" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <Label className="mb-1.5 font-body text-sm text-foreground">Expiry Date</Label>
+                            <Input placeholder="MM / YY" className="bg-background border-border font-body rounded-xl h-11" />
+                          </div>
+                          <div>
+                            <Label className="mb-1.5 font-body text-sm text-foreground">CVV</Label>
+                            <Input placeholder="***" type="password" className="bg-background border-border font-body rounded-xl h-11" />
+                          </div>
+                        </div>
+                        <div>
+                          <Label className="mb-1.5 font-body text-sm text-foreground">Cardholder Name</Label>
+                          <Input placeholder="Name on card" className="bg-background border-border font-body rounded-xl h-11" />
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                  {paymentMethod === 'upi' && (
+                    <motion.div key="upi-fields" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
+                      <div className="mt-4 rounded-xl border border-border/50 bg-secondary/20 p-4">
+                        <Label className="mb-1.5 font-body text-sm text-foreground">UPI ID</Label>
+                        <Input placeholder="yourname@paytm" className="bg-background border-border font-body rounded-xl h-11" />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Order Summary Sidebar */}
+              <div className="lg:col-span-2">
+                <Card className="border border-border/50 bg-card p-5 sticky top-24">
+                  <h2 className="font-sans text-base font-semibold text-foreground mb-4">Order Summary</h2>
+
+                  <div className="flex items-center gap-3 mb-4 pb-4 border-b border-border/50">
+                    <div className="h-14 w-14 rounded-xl overflow-hidden shrink-0">
+                      <img src={imageUrl} alt={service.name} className="h-full w-full object-cover" />
+                    </div>
+                    <div>
+                      <p className="font-body text-sm font-medium text-foreground">{service.name}</p>
+                      <p className="font-body text-xs text-muted-foreground">{service.duration}</p>
                     </div>
                   </div>
-                )}
 
-                {paymentMethod === 'upi' && (
-                  <div className="mt-4">
-                    <Label className="mb-1.5 font-body text-sm">UPI ID</Label>
-                    <Input placeholder="yourname@upi" className="bg-background/50 font-body rounded-lg" />
+                  <div className="space-y-2.5 font-body text-sm mb-4">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Service fee</span>
+                      <span className="text-foreground">&#8377;{service.price}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">GST (18%)</span>
+                      <span className="text-foreground">&#8377;{tax}</span>
+                    </div>
+                    <div className="flex justify-between border-t border-border/50 pt-2.5 font-semibold">
+                      <span className="text-foreground">Total</span>
+                      <span className="text-primary font-sans text-lg">&#8377;{total}</span>
+                    </div>
                   </div>
-                )}
-              </Card>
 
-              <Card className="glass border-border/50 p-5 sm:p-6 shadow-elevated noise md:col-span-2">
-                <h2 className="mb-4 font-sans text-lg font-semibold text-foreground">Order Summary</h2>
-                <div className="space-y-3 font-body text-sm">
-                  <div className="flex justify-between"><span className="text-muted-foreground">{service.name}</span><span className="text-foreground">₹{service.price}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">GST (18%)</span><span className="text-foreground">₹{tax}</span></div>
-                  <div className="border-t border-border/40 pt-3">
-                    <div className="flex justify-between font-sans font-semibold"><span className="text-foreground">Total</span><span className="text-foreground">₹{total}</span></div>
+                  {/* Booking details */}
+                  <div className="rounded-xl bg-secondary/30 p-3 mb-4 space-y-1.5 font-body text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2"><Calendar className="h-3 w-3 text-primary" /> {form.date}</div>
+                    <div className="flex items-center gap-2"><Clock className="h-3 w-3 text-primary" /> {form.time}</div>
+                    <div className="flex items-center gap-2"><MapPin className="h-3 w-3 text-primary" /> {form.address}</div>
                   </div>
-                </div>
 
-                <div className="mt-4 rounded-xl bg-muted/30 p-3 font-body text-xs text-muted-foreground space-y-0.5">
-                  <p><strong>Date:</strong> {form.date}</p>
-                  <p><strong>Time:</strong> {form.time}</p>
-                  <p><strong>Address:</strong> {form.address}</p>
-                </div>
+                  <Button
+                    className="w-full bg-primary text-primary-foreground font-body rounded-xl h-12 text-sm font-semibold hover:bg-primary/90 transition-all"
+                    onClick={handlePayment}
+                    disabled={processing}
+                  >
+                    {processing ? (
+                      <span className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Processing...</span>
+                    ) : (
+                      <>Pay &#8377;{total}</>
+                    )}
+                  </Button>
 
-                <Button
-                  className="mt-4 w-full gradient-primary border-0 text-primary-foreground shadow-glow font-body rounded-xl"
-                  onClick={handlePayment}
-                  disabled={processing}
-                >
-                  {processing ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Processing...
-                    </span>
-                  ) : (
-                    `Pay ₹${total}`
-                  )}
-                </Button>
-
-                <p className="mt-2 text-center font-body text-xs text-muted-foreground">
-                  🔒 Secured by 256-bit SSL encryption
-                </p>
-              </Card>
+                  <div className="mt-3 flex items-center justify-center gap-1.5 font-body text-xs text-muted-foreground">
+                    <Lock className="h-3 w-3" /> Secured by 256-bit SSL encryption
+                  </div>
+                </Card>
+              </div>
             </div>
           </motion.div>
         )}
 
+        {/* STEP 3: Success */}
         {step === 'success' && (
-          <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-            <Card className="glass border-border/50 p-8 sm:p-10 text-center shadow-elevated noise">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-                className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-success/10"
-              >
-                <CheckCircle className="h-10 w-10 text-success" />
-              </motion.div>
-              <h2 className="mb-2 font-sans text-2xl font-bold text-foreground">Payment Successful!</h2>
-              <p className="mb-1 font-body text-muted-foreground">Your booking has been confirmed.</p>
-              <p className="mb-6 font-body text-sm text-muted-foreground">
-                {service.name} • {form.date} at {form.time}
-              </p>
-              <div className="mb-6 rounded-xl bg-muted/30 p-4 font-body text-sm space-y-1">
-                <div className="flex justify-between"><span className="text-muted-foreground">Amount Paid</span><span className="font-semibold text-foreground">₹{total}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Payment Method</span><span className="capitalize text-foreground">{paymentMethod === 'upi' ? 'UPI' : paymentMethod === 'netbanking' ? 'Net Banking' : 'Card'}</span></div>
-              </div>
-              <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-                <Button onClick={() => navigate('/bookings')} className="gradient-primary border-0 text-primary-foreground font-body rounded-xl">View Bookings</Button>
-                <Button variant="outline" onClick={() => navigate('/services')} className="font-body rounded-xl">Book Another</Button>
-              </div>
-            </Card>
+          <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <div className="max-w-lg mx-auto">
+              <Card className="border border-border/50 bg-card p-8 sm:p-10 text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+                  className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-success/10"
+                >
+                  <CheckCircle className="h-10 w-10 text-success" />
+                </motion.div>
+
+                <h2 className="mb-1 font-sans text-2xl font-bold text-foreground">Booking Confirmed!</h2>
+                <p className="mb-6 font-body text-sm text-muted-foreground">Your service has been booked successfully.</p>
+
+                <div className="rounded-xl bg-secondary/30 border border-border/50 p-4 mb-6 text-left space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="h-12 w-12 rounded-xl overflow-hidden shrink-0">
+                      <img src={imageUrl} alt={service.name} className="h-full w-full object-cover" />
+                    </div>
+                    <div>
+                      <p className="font-body text-sm font-medium text-foreground">{service.name}</p>
+                      <p className="font-body text-xs text-muted-foreground">{service.duration}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 font-body text-xs border-t border-border/50 pt-3">
+                    <div>
+                      <p className="text-muted-foreground">Date</p>
+                      <p className="text-foreground font-medium">{form.date}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Time</p>
+                      <p className="text-foreground font-medium">{form.time}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Amount Paid</p>
+                      <p className="text-foreground font-medium">&#8377;{total}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Payment</p>
+                      <p className="text-foreground font-medium capitalize">{paymentMethod === 'upi' ? 'UPI' : paymentMethod === 'netbanking' ? 'Net Banking' : 'Card'}</p>
+                    </div>
+                  </div>
+                  <div className="font-body text-xs border-t border-border/50 pt-3">
+                    <p className="text-muted-foreground">Address</p>
+                    <p className="text-foreground font-medium">{form.address}</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
+                  <Button onClick={() => navigate('/bookings')} className="bg-primary text-primary-foreground font-body rounded-xl hover:bg-primary/90">
+                    View My Bookings
+                  </Button>
+                  <Button variant="outline" onClick={() => navigate('/services')} className="font-body rounded-xl border-border">
+                    Browse More Services
+                  </Button>
+                </div>
+              </Card>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
