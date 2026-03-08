@@ -420,7 +420,7 @@ const PaymentBookingPage = () => {
                     </div>
                     <div>
                       <p className="text-muted-foreground">Payment</p>
-                      <p className="text-foreground font-medium capitalize">{paymentMethod === 'upi' ? 'UPI' : paymentMethod === 'netbanking' ? 'Net Banking' : 'Card'}</p>
+                      <p className="text-foreground font-medium capitalize">{paymentMethod === 'upi' ? 'JazzCash/Easypaisa' : paymentMethod === 'netbanking' ? 'Bank Transfer' : 'Card'}</p>
                     </div>
                   </div>
                   <div className="font-body text-xs border-t border-border/50 pt-3">
