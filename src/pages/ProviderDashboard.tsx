@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 const ProviderDashboard = () => {
+  const { currentUser } = useAuth();
   const { data: bookings = [], isLoading } = useBookings();
   const { data: categories = [] } = useCategories();
   const createService = useCreateService();

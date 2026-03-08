@@ -139,8 +139,10 @@ export const useCreateBooking = () => {
 export const useUpdateBookingStatus = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const { error } = await supabase.from('bookings').update({ status }).eq('id', id);
+    mutationFn: async ({ id, status, provider_id }: { id: string; status: string; provider_id?: string }) => {
+      const updateData: { status: string; provider_id?: string } = { status };
+      if (provider_id) updateData.provider_id = provider_id;
+      const { error } = await supabase.from('bookings').update(updateData).eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
