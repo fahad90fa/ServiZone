@@ -65,7 +65,7 @@ const AdminDashboard = () => {
         <StatCard title="Completed" value={completed} icon={TrendingUp} />
         <StatCard title="Total Users" value={profiles.length} icon={Users} />
         <StatCard title="Services" value={services.length} icon={Wrench} />
-        <StatCard title="Revenue" value={`₹${totalRevenue.toLocaleString()}`} icon={DollarSign} trend="From completed" trendUp />
+        <StatCard title="Revenue" value={`Rs. ${totalRevenue.toLocaleString()}`} icon={DollarSign} trend="From completed" trendUp />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">

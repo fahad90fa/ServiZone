@@ -170,7 +170,7 @@ const ProviderDashboard = () => {
         <StatCard title="Pending" value={pending} icon={Clock} />
         <StatCard title="Active" value={active} icon={Calendar} />
         <StatCard title="Completed" value={completed} icon={CheckCircle} />
-        <StatCard title="Revenue" value={`₹${revenue.toLocaleString()}`} icon={DollarSign} />
+        <StatCard title="Revenue" value={`Rs. ${revenue.toLocaleString()}`} icon={DollarSign} />
       </motion.div>
 
       <h2 className="mb-4 font-sans text-xl font-bold text-foreground">Your Jobs</h2>

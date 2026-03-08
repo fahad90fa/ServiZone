@@ -38,7 +38,7 @@ const AdminSettingsPage = () => {
               <div>
                 <Label>Currency</Label>
                 <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm" value={currency} onChange={e => setCurrency(e.target.value)}>
-                  <option value="INR">INR (₹)</option>
+                  <option value="PKR">PKR (Rs.)</option>
                   <option value="USD">USD ($)</option>
                   <option value="EUR">EUR (€)</option>
                 </select>

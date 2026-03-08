@@ -63,7 +63,7 @@ const ProviderEarningsPage = () => {
                   <p className="text-xs text-muted-foreground">{b.date}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-foreground">₹{b.price}</p>
+                  <p className="text-sm font-semibold text-foreground">Rs. {b.price}</p>
                   <Badge variant="outline" className="bg-success/10 text-success border-success/30 text-xs">Paid</Badge>
                 </div>
               </motion.div>

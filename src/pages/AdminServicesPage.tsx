@@ -161,7 +161,7 @@ const AdminServicesPage = () => {
               <tr key={s.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                 <td className="p-4 font-medium text-foreground">{s.name}</td>
                 <td className="p-4 text-muted-foreground">{s.category}</td>
-                <td className="p-4 font-medium text-foreground">₹{s.price}</td>
+                <td className="p-4 font-medium text-foreground">Rs. {s.price}</td>
                 <td className="p-4 text-muted-foreground">{s.duration}</td>
                 <td className="p-4">
                   <span className="flex items-center gap-1 text-muted-foreground">

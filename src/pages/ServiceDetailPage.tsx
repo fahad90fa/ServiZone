@@ -230,7 +230,7 @@ const ServiceDetailPage = () => {
                       <div className="p-3.5">
                         <h3 className="font-sans text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{s.name}</h3>
                         <div className="mt-2 flex items-center justify-between">
-                          <span className="font-sans text-base font-bold text-foreground">₹{s.price}</span>
+                          <span className="font-sans text-base font-bold text-foreground">Rs. {s.price}</span>
                           <div className="flex items-center gap-2 font-body text-xs text-muted-foreground">
                             <span className="flex items-center gap-1"><Star className="h-3 w-3 fill-primary text-primary" /> {s.rating}</span>
                             <span>• {s.duration}</span>

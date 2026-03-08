@@ -53,8 +53,7 @@ const BookingCard = ({ booking, showActions, onAccept, onReject, onUpdateStatus,
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
         <div className="flex items-center gap-1 font-sans font-semibold text-foreground">
-          <IndianRupee className="h-4 w-4" />
-          {booking.price}
+          Rs. {booking.price}
         </div>
 
         {showActions && booking.status === 'pending' && (
