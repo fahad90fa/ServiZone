@@ -260,15 +260,7 @@ src/
 - [x] Admin service & category CRUD
 - [x] Admin booking status management
 
-### Bonus Features
-- [x] Mocked payment flow (UPI, Card, Cash)
-- [x] Mocked push notifications
-- [x] Review & rating system
-- [x] Provider earnings dashboard with charts
-- [x] Platform settings (commission, tax, maintenance mode)
-- [x] Help & support page with FAQ
-- [x] About page
-- [x] Database schema with seed data
+
 
 ---
 
