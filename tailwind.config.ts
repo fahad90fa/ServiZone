@@ -12,6 +12,7 @@ export default {
         "2xl": "1200px",
       },
     },
+    // ...
     extend: {
       fontFamily: {
         sans: ['"Outfit"', 'system-ui', 'sans-serif'],
