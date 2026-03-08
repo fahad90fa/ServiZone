@@ -114,7 +114,7 @@ const ProviderDashboard = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label className="mb-1.5 font-body text-sm text-foreground/70">Price (₹) *</Label>
+                      <Label className="mb-1.5 font-body text-sm text-foreground/70">Price (Rs.) *</Label>
                       <Input
                         type="number"
                         value={form.price}
