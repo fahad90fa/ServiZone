@@ -252,9 +252,9 @@ const PaymentBookingPage = () => {
 
                 <div className="space-y-3">
                   {[
-                    { key: 'card' as const, label: 'Credit / Debit Card', icon: CreditCard, desc: 'Visa, Mastercard, RuPay' },
-                    { key: 'upi' as const, label: 'UPI', icon: Smartphone, desc: 'Google Pay, PhonePe, Paytm' },
-                    { key: 'netbanking' as const, label: 'Net Banking', icon: Building, desc: 'All major banks supported' },
+                    { key: 'card' as const, label: 'Credit / Debit Card', icon: CreditCard, desc: 'Visa, Mastercard' },
+                    { key: 'upi' as const, label: 'JazzCash / Easypaisa', icon: Smartphone, desc: 'Mobile wallets' },
+                    { key: 'netbanking' as const, label: 'Bank Transfer', icon: Building, desc: 'All major banks supported' },
                   ].map(method => (
                     <div
                       key={method.key}
