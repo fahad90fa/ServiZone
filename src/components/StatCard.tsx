@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, LucideIcon } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface StatCardProps {
   title: string;
@@ -10,23 +11,20 @@ interface StatCardProps {
 }
 
 const StatCard = ({ title, value, icon: Icon, trend, trendUp }: StatCardProps) => (
-  <Card className="glass border-border/50 p-5 shadow-soft hover-lift noise group">
-    <div className="flex items-start justify-between">
-      <div>
-        <p className="font-body text-xs text-muted-foreground uppercase tracking-wider">{title}</p>
-        <p className="mt-1 font-sans text-2xl font-bold text-foreground">{value}</p>
-        {trend && (
-          <p className={`mt-1 flex items-center gap-1 font-body text-xs ${trendUp ? 'text-success' : 'text-destructive'}`}>
-            {trendUp ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-            {trend}
-          </p>
-        )}
+  <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
+    <Card className="glass-dark border-border/30 p-4 shadow-card hover:shadow-elevated transition-all duration-300 hover:border-primary/20">
+      <div className="flex items-start justify-between mb-2">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
+          <Icon className="h-5 w-5 text-primary" />
+        </div>
       </div>
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/8 group-hover:gradient-primary group-hover:shadow-glow transition-all duration-300">
-        <Icon className="h-5 w-5 text-primary group-hover:text-primary-foreground transition-colors" />
-      </div>
-    </div>
-  </Card>
+      <p className="font-sans text-2xl font-bold text-foreground">{value}</p>
+      <p className="font-body text-xs text-muted-foreground mt-0.5">{title}</p>
+      {trend && (
+        <p className={`mt-1 font-body text-xs ${trendUp ? 'text-success' : 'text-destructive'}`}>{trend}</p>
+      )}
+    </Card>
+  </motion.div>
 );
 
 export default StatCard;
