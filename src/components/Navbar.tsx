@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { UserRole } from '@/contexts/AuthContext';
 import { Home, Calendar, User, LogOut, Shield, Wrench, ChevronDown, Menu, X, Clock, DollarSign, Star, HelpCircle, Settings, FolderOpen } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import NotificationBell from '@/components/NotificationBell';
 
 const roleLabels: Record<UserRole, string> = { user: 'Customer', provider: 'Provider', admin: 'Admin' };
@@ -44,13 +44,13 @@ const Navbar = () => {
       ];
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border/40 glass-dark">
-      <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-primary shadow-glow transition-all duration-300 group-hover:scale-110">
-            <Wrench className="h-5 w-5 text-primary-foreground" />
+    <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
+      <div className="container flex h-14 items-center justify-between">
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+            <Wrench className="h-4 w-4 text-primary-foreground" />
           </div>
-          <span className="font-sans text-xl font-bold text-foreground">Servi<span className="text-gradient">Zone</span></span>
+          <span className="font-sans text-lg font-bold text-foreground">Servi<span className="text-primary">Zone</span></span>
         </Link>
 
         <div className="hidden items-center gap-0.5 md:flex">
@@ -59,10 +59,10 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`gap-1.5 text-xs font-body rounded-lg transition-all duration-300 ${
+                className={`gap-1.5 font-body text-xs rounded-lg ${
                   isActive(link.to)
-                    ? 'bg-primary/15 text-primary font-medium shadow-soft'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-primary/10 text-primary font-medium'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
                 }`}
               >
                 <link.icon className="h-3.5 w-3.5" />
@@ -77,32 +77,30 @@ const Navbar = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="hidden gap-1.5 sm:flex rounded-xl border-border/60 font-body text-xs hover:border-primary/40 transition-all duration-300">
-                <div className="h-5 w-5 rounded-md gradient-primary flex items-center justify-center">
-                  <User className="h-3 w-3 text-primary-foreground" />
-                </div>
+              <Button variant="outline" size="sm" className="hidden gap-1.5 sm:flex rounded-lg border-border font-body text-xs">
+                <User className="h-3.5 w-3.5" />
                 {currentUser ? roleLabels[currentUser.role] : 'Guest'}
                 <ChevronDown className="h-3 w-3 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="glass-dark border-border/40 shadow-elevated">
-              <DropdownMenuItem onClick={() => switchRole('user')} className="font-body text-sm hover:bg-primary/10">
+            <DropdownMenuContent align="end" className="border-border bg-card">
+              <DropdownMenuItem onClick={() => switchRole('user')} className="font-body text-sm">
                 <User className="mr-2 h-4 w-4 text-info" /> Customer
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => switchRole('provider')} className="font-body text-sm hover:bg-primary/10">
+              <DropdownMenuItem onClick={() => switchRole('provider')} className="font-body text-sm">
                 <Wrench className="mr-2 h-4 w-4 text-success" /> Provider
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => switchRole('admin')} className="font-body text-sm hover:bg-primary/10">
+              <DropdownMenuItem onClick={() => switchRole('admin')} className="font-body text-sm">
                 <Shield className="mr-2 h-4 w-4 text-warning" /> Admin
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-border/40" />
-              <DropdownMenuItem onClick={logout} className="font-body text-sm text-destructive hover:bg-destructive/10">
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout} className="font-body text-sm text-destructive">
                 <LogOut className="mr-2 h-4 w-4" /> Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="ghost" size="sm" className="md:hidden hover:bg-secondary/50" onClick={() => setMobileOpen(!mobileOpen)}>
+          <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
@@ -114,17 +112,13 @@ const Navbar = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-border/40 md:hidden glass-dark"
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden border-t border-border md:hidden"
           >
             <div className="container flex flex-col gap-1 py-3">
               {navLinks.map(link => (
                 <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={`w-full justify-start gap-2 font-body ${isActive(link.to) ? 'bg-primary/15 text-primary' : 'hover:bg-secondary/50'}`}
-                  >
+                  <Button variant="ghost" size="sm" className={`w-full justify-start gap-2 font-body ${isActive(link.to) ? 'bg-primary/10 text-primary' : ''}`}>
                     <link.icon className="h-4 w-4" />
                     {link.label}
                   </Button>
@@ -132,7 +126,7 @@ const Navbar = () => {
               ))}
               <div className="mt-2 flex gap-1">
                 {(['user', 'provider', 'admin'] as UserRole[]).map(r => (
-                  <Button key={r} variant="outline" size="sm" onClick={() => { switchRole(r); setMobileOpen(false); }} className="flex-1 text-xs font-body capitalize rounded-lg border-border/60 hover:border-primary/40">
+                  <Button key={r} variant="outline" size="sm" onClick={() => { switchRole(r); setMobileOpen(false); }} className="flex-1 text-xs font-body capitalize rounded-lg border-border">
                     {roleLabels[r]}
                   </Button>
                 ))}
