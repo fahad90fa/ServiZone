@@ -10,18 +10,46 @@ interface ServiceCardProps {
   onBook?: (service: Service) => void;
 }
 
+const categoryImages: Record<string, string> = {
+  cleaning: '/images/cleaning.jpg',
+  plumbing: '/images/plumbing.jpg',
+  electrical: '/images/electrical.jpg',
+  painting: '/images/painting.jpg',
+  'pest control': '/images/pest-control.jpg',
+  'appliance repair': '/images/appliance-repair.jpg',
+};
+
+const getServiceImage = (service: Service): string => {
+  if (service.image_url && service.image_url.length > 5) return service.image_url;
+  const catName = (service.category_name || '').toLowerCase();
+  for (const [key, val] of Object.entries(categoryImages)) {
+    if (catName.includes(key)) return val;
+  }
+  // fallback: match service name
+  const sName = service.name.toLowerCase();
+  for (const [key, val] of Object.entries(categoryImages)) {
+    if (sName.includes(key)) return val;
+  }
+  return '/images/cleaning.jpg';
+};
+
 const ServiceCard = ({ service, onBook }: ServiceCardProps) => {
   const navigate = useNavigate();
+  const imageUrl = getServiceImage(service);
 
   return (
     <Card className="group overflow-hidden border-border bg-card hover-lift">
       <div
-        className="relative h-40 bg-secondary flex items-center justify-center cursor-pointer"
+        className="relative h-44 cursor-pointer overflow-hidden"
         onClick={() => navigate(`/service/${service.id}`)}
       >
-        <span className="font-sans text-2xl font-bold text-muted-foreground/20 uppercase tracking-wider select-none">
-          {service.category_name || 'Service'}
-        </span>
+        <img
+          src={imageUrl}
+          alt={service.name}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
         {service.is_popular && (
           <Badge className="absolute right-3 top-3 bg-primary text-primary-foreground border-0 font-body text-xs">
             Popular
