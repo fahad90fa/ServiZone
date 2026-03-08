@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Session, User as SupaUser } from '@supabase/supabase-js';
 
@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [roleOverride, setRoleOverride] = useState<UserRole | null>(null);
+  const roleOverrideRef = useRef<UserRole | null>(null);
 
   const fetchProfile = async (supaUser: SupaUser): Promise<AppUser | null> => {
     const { data: profile } = await supabase
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .select('role')
       .eq('user_id', supaUser.id);
 
-    const role = roleOverride || (roles?.[0]?.role as UserRole) || 'user';
+    const role = roleOverrideRef.current || (roles?.[0]?.role as UserRole) || 'user';
 
     if (profile) {
       return {
@@ -113,6 +114,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const switchRole = (role: UserRole) => {
+    roleOverrideRef.current = role;
     setRoleOverride(role);
     if (currentUser) {
       setCurrentUser({ ...currentUser, role });
