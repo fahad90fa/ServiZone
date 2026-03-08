@@ -18,28 +18,27 @@ const Footer = () => (
         <div>
           <h4 className="mb-3 text-sm font-semibold text-foreground">Services</h4>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <p className="cursor-pointer hover:text-foreground">Home Cleaning</p>
-            <p className="cursor-pointer hover:text-foreground">Plumbing</p>
-            <p className="cursor-pointer hover:text-foreground">Electrical</p>
-            <p className="cursor-pointer hover:text-foreground">Painting</p>
+            <Link to="/services" className="block hover:text-foreground">Home Cleaning</Link>
+            <Link to="/services" className="block hover:text-foreground">Plumbing</Link>
+            <Link to="/services" className="block hover:text-foreground">Electrical</Link>
+            <Link to="/services" className="block hover:text-foreground">Painting</Link>
           </div>
         </div>
 
         <div>
           <h4 className="mb-3 text-sm font-semibold text-foreground">Company</h4>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <p className="cursor-pointer hover:text-foreground">About Us</p>
-            <p className="cursor-pointer hover:text-foreground">Careers</p>
-            <p className="cursor-pointer hover:text-foreground">Partner with Us</p>
-            <p className="cursor-pointer hover:text-foreground">Blog</p>
+            <Link to="/about" className="block hover:text-foreground">About Us</Link>
+            <Link to="/help" className="block hover:text-foreground">Help & Support</Link>
+            <Link to="/signup" className="block hover:text-foreground">Become a Provider</Link>
           </div>
         </div>
 
         <div>
           <h4 className="mb-3 text-sm font-semibold text-foreground">Support</h4>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <p className="cursor-pointer hover:text-foreground">Help Center</p>
-            <p className="cursor-pointer hover:text-foreground">Contact Us</p>
+            <Link to="/help" className="block hover:text-foreground">Help Center</Link>
+            <Link to="/help" className="block hover:text-foreground">Contact Us</Link>
             <p className="cursor-pointer hover:text-foreground">Terms of Service</p>
             <p className="cursor-pointer hover:text-foreground">Privacy Policy</p>
           </div>
