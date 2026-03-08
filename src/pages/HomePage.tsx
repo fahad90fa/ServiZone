@@ -19,7 +19,7 @@ const howItWorks = [
 ];
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
-const fadeUp = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
+const fadeUp = { hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } } };
 
 const HomePage = () => {
   const navigate = useNavigate();
