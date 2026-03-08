@@ -28,9 +28,9 @@ const ProviderEarningsPage = () => {
       <p className="mb-6 text-muted-foreground">Track your income and payment history</p>
 
       <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard title="Total Earnings" value={`₹${totalEarnings.toLocaleString()}`} icon={DollarSign} />
-        <StatCard title="Platform Fee (15%)" value={`₹${platformFee.toLocaleString()}`} icon={TrendingUp} />
-        <StatCard title="Net Earnings" value={`₹${netEarnings.toLocaleString()}`} icon={DollarSign} trend="Net after fees" trendUp />
+        <StatCard title="Total Earnings" value={`Rs. ${totalEarnings.toLocaleString()}`} icon={DollarSign} />
+        <StatCard title="Platform Fee (15%)" value={`Rs. ${platformFee.toLocaleString()}`} icon={TrendingUp} />
+        <StatCard title="Net Earnings" value={`Rs. ${netEarnings.toLocaleString()}`} icon={DollarSign} trend="Net after fees" trendUp />
         <StatCard title="Jobs Completed" value={completed.length} icon={CheckCircle} />
       </div>
 
