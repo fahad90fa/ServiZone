@@ -312,8 +312,8 @@ const PaymentBookingPage = () => {
                   {paymentMethod === 'upi' && (
                     <motion.div key="upi-fields" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
                       <div className="mt-4 rounded-xl border border-border/50 bg-secondary/20 p-4">
-                        <Label className="mb-1.5 font-body text-sm text-foreground">UPI ID</Label>
-                        <Input placeholder="yourname@paytm" className="bg-background border-border font-body rounded-xl h-11" />
+                        <Label className="mb-1.5 font-body text-sm text-foreground">Mobile Wallet Number</Label>
+                        <Input placeholder="03XX-XXXXXXX" className="bg-background border-border font-body rounded-xl h-11" />
                       </div>
                     </motion.div>
                   )}
