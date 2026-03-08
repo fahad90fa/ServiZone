@@ -416,7 +416,7 @@ const PaymentBookingPage = () => {
                     </div>
                     <div>
                       <p className="text-muted-foreground">Amount Paid</p>
-                      <p className="text-foreground font-medium">&#8377;{total}</p>
+                      <p className="text-foreground font-medium">Rs. {total}</p>
                     </div>
                     <div>
                       <p className="text-muted-foreground">Payment</p>
