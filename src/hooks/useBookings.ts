@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 export interface Booking {
   id: string;
@@ -16,7 +17,6 @@ export interface Booking {
   notes: string | null;
   created_at: string;
   updated_at: string;
-  // joined
   service_name?: string;
   user_name?: string;
   provider_name?: string;
@@ -24,23 +24,45 @@ export interface Booking {
 
 export const useBookings = () => {
   const { currentUser } = useAuth();
+  const qc = useQueryClient();
+
+  // Real-time subscription
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const channel = supabase
+      .channel('bookings-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'bookings' },
+        () => {
+          qc.invalidateQueries({ queryKey: ['bookings'] });
+          qc.invalidateQueries({ queryKey: ['admin-bookings'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentUser, qc]);
+
   return useQuery({
     queryKey: ['bookings', currentUser?.id, currentUser?.role],
     queryFn: async () => {
-      let query = supabase.from('bookings').select('*, services(name), profiles!bookings_user_id_fkey(name)');
-      
+      let query = supabase.from('bookings').select('*, services(name)');
+
       if (currentUser?.role === 'user') {
         query = query.eq('user_id', currentUser.id);
       } else if (currentUser?.role === 'provider') {
         query = query.eq('provider_id', currentUser.id);
       }
-      
+
       const { data, error } = await query.order('created_at', { ascending: false });
       if (error) throw error;
       return (data || []).map(b => ({
         ...b,
         service_name: (b.services as any)?.name || '',
-        user_name: (b.profiles as any)?.name || '',
       })) as Booking[];
     },
     enabled: !!currentUser,
