@@ -42,7 +42,7 @@ const ProviderEarningsPage = () => {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 13% 91%)" />
               <XAxis dataKey="month" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
-              <Tooltip formatter={(value: number) => [`₹${value.toLocaleString()}`, 'Earnings']} />
+              <Tooltip formatter={(value: number) => [`Rs. ${value.toLocaleString()}`, 'Earnings']} />
               <Bar dataKey="earnings" fill="hsl(250 84% 54%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
