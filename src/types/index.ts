@@ -49,6 +49,19 @@ export interface Booking {
   createdAt: string;
 }
 
+export interface Review {
+  id: string;
+  bookingId: string;
+  userId: string;
+  userName: string;
+  providerId: string;
+  serviceId: string;
+  serviceName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
 export interface DashboardStats {
   totalBookings: number;
   totalUsers: number;

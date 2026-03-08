@@ -1,4 +1,4 @@
-import { User, ServiceCategory, Service, Booking, DashboardStats } from '@/types';
+import { User, ServiceCategory, Service, Booking, DashboardStats, Review } from '@/types';
 
 export const categories: ServiceCategory[] = [
   { id: 'cat1', name: 'Home Cleaning', icon: 'Sparkles', description: 'Professional home cleaning services' },
@@ -37,6 +37,11 @@ export const bookings: Booking[] = [
   { id: 'b4', userId: 'u2', userName: 'Priya Patel', providerId: 'u3', providerName: 'Amit Kumar', serviceId: 's2', serviceName: 'Bathroom Cleaning', date: '2026-03-08', time: '9:00 AM', status: 'in_progress', price: 499, address: '15 Park Street, Mumbai', createdAt: '2026-03-06' },
   { id: 'b5', userId: 'u6', userName: 'Vikram Singh', providerId: 'u3', providerName: 'Amit Kumar', serviceId: 's9', serviceName: 'Pest Treatment', date: '2026-03-12', time: '3:00 PM', status: 'pending', price: 999, address: '8 Nehru Place, Delhi', createdAt: '2026-03-08' },
   { id: 'b6', userId: 'u1', userName: 'Rahul Sharma', providerId: 'u4', providerName: 'Sneha Reddy', serviceId: 's7', serviceName: 'Full Home Painting', date: '2026-02-20', time: '8:00 AM', status: 'completed', price: 8999, address: '42 MG Road, Bangalore', createdAt: '2026-02-15' },
+];
+
+export const reviews: Review[] = [
+  { id: 'r1', bookingId: 'b3', userId: 'u1', userName: 'Rahul Sharma', providerId: 'u4', serviceId: 's8', serviceName: 'AC Repair', rating: 5, comment: 'Excellent service! The technician was very professional and fixed the AC quickly. Highly recommended.', createdAt: '2026-03-06' },
+  { id: 'r2', bookingId: 'b6', userId: 'u1', userName: 'Rahul Sharma', providerId: 'u4', serviceId: 's7', serviceName: 'Full Home Painting', rating: 4, comment: 'Great painting work. The team was punctual and the finish quality is good. Minor touch-ups needed.', createdAt: '2026-02-23' },
 ];
 
 export const dashboardStats: DashboardStats = {
