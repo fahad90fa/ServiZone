@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const fadeUp = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
+const fade = { hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 
 const ServicesPage = () => {
   const navigate = useNavigate();
@@ -24,41 +24,31 @@ const ServicesPage = () => {
   });
 
   return (
-    <div className="container py-10">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        <p className="font-body text-sm font-medium text-primary mb-2 tracking-wider uppercase">Browse</p>
-        <h1 className="mb-2 font-sans text-4xl font-bold text-foreground">All Services</h1>
-        <p className="mb-8 font-body text-muted-foreground">Find and book the perfect service for your needs</p>
+    <div className="container py-8">
+      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+        <p className="font-body text-xs font-semibold uppercase tracking-widest text-primary mb-1">Browse</p>
+        <h1 className="mb-1 font-sans text-3xl font-bold text-foreground">All Services</h1>
+        <p className="mb-6 font-body text-sm text-muted-foreground">Find and book the perfect service for your needs</p>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="mb-8 flex flex-col gap-4 sm:flex-row"
-      >
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search services..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-10 bg-secondary/50 border-border/40 font-body rounded-xl focus:border-primary/50 transition-colors"
+            className="pl-10 bg-secondary border-border font-body rounded-lg focus:border-primary/50"
           />
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.15 }}
-        className="mb-8 flex flex-wrap gap-2"
-      >
+      <div className="mb-6 flex flex-wrap gap-2">
         <Button
           size="sm"
           variant={!activeCategory ? 'default' : 'outline'}
           onClick={() => setActiveCategory(null)}
-          className={`font-body rounded-lg transition-all duration-300 ${!activeCategory ? 'gradient-primary border-0 text-primary-foreground shadow-glow' : 'border-border/40 hover:border-primary/40'}`}
+          className={`font-body text-xs rounded-lg ${!activeCategory ? 'bg-primary text-primary-foreground' : 'border-border'}`}
         >
           All
         </Button>
@@ -68,23 +58,23 @@ const ServicesPage = () => {
             size="sm"
             variant={activeCategory === cat.id ? 'default' : 'outline'}
             onClick={() => setActiveCategory(cat.id)}
-            className={`font-body rounded-lg transition-all duration-300 ${activeCategory === cat.id ? 'gradient-primary border-0 text-primary-foreground shadow-glow' : 'border-border/40 hover:border-primary/40'}`}
+            className={`font-body text-xs rounded-lg ${activeCategory === cat.id ? 'bg-primary text-primary-foreground' : 'border-border'}`}
           >
             {cat.name}
           </Button>
         ))}
-      </motion.div>
+      </div>
 
       {isLoading ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="h-80 rounded-2xl bg-secondary/50 animate-pulse" />
+            <div key={i} className="h-72 rounded-lg bg-secondary animate-pulse" />
           ))}
         </div>
       ) : (
-        <motion.div initial="hidden" animate="show" variants={stagger} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div initial="hidden" animate="show" variants={stagger} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map(service => (
-            <motion.div key={service.id} variants={fadeUp}>
+            <motion.div key={service.id} variants={fade}>
               <ServiceCard service={service} onBook={() => navigate(`/book/${service.id}`)} />
             </motion.div>
           ))}
@@ -92,7 +82,7 @@ const ServicesPage = () => {
       )}
 
       {!isLoading && filtered.length === 0 && (
-        <div className="py-20 text-center font-body text-muted-foreground">No services found matching your search.</div>
+        <div className="py-16 text-center font-body text-muted-foreground">No services found matching your search.</div>
       )}
     </div>
   );
