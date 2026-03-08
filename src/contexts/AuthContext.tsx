@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { User, UserRole } from '@/types';
-import { users } from '@/data/mock';
+import { users as initialUsers } from '@/data/mock';
 
 interface AuthContextType {
   currentUser: User | null;
   login: (email: string, password: string) => boolean;
+  signup: (name: string, email: string, phone: string, role: UserRole) => void;
   logout: () => void;
   switchRole: (role: UserRole) => void;
 }
@@ -12,7 +13,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(users[0]); // Default logged in as user
+  const [users, setUsers] = useState(initialUsers);
+  const [currentUser, setCurrentUser] = useState<User | null>(initialUsers[0]);
 
   const login = (email: string, _password: string) => {
     const user = users.find(u => u.email === email);
@@ -23,6 +25,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return false;
   };
 
+  const signup = (name: string, email: string, phone: string, role: UserRole) => {
+    const newUser: User = {
+      id: `u${Date.now()}`,
+      name,
+      email,
+      phone,
+      role,
+      createdAt: new Date().toISOString().split('T')[0],
+      status: 'active',
+    };
+    setUsers(prev => [...prev, newUser]);
+    setCurrentUser(newUser);
+  };
+
   const logout = () => setCurrentUser(null);
 
   const switchRole = (role: UserRole) => {
@@ -31,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout, switchRole }}>
+    <AuthContext.Provider value={{ currentUser, login, signup, logout, switchRole }}>
       {children}
     </AuthContext.Provider>
   );
