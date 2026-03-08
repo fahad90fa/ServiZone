@@ -75,30 +75,36 @@ const Navbar = () => {
         <div className="flex items-center gap-1.5">
           {currentUser && <NotificationBell />}
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="hidden gap-1.5 sm:flex rounded-lg border-border font-body text-xs">
-                <User className="h-3.5 w-3.5" />
-                {currentUser ? roleLabels[currentUser.role] : 'Guest'}
-                <ChevronDown className="h-3 w-3 text-muted-foreground" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="border-border bg-card">
-              <DropdownMenuItem onClick={() => switchRole('user')} className="font-body text-sm">
-                <User className="mr-2 h-4 w-4 text-info" /> Customer
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => switchRole('provider')} className="font-body text-sm">
-                <Wrench className="mr-2 h-4 w-4 text-success" /> Provider
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => switchRole('admin')} className="font-body text-sm">
-                <Shield className="mr-2 h-4 w-4 text-warning" /> Admin
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="font-body text-sm text-destructive">
-                <LogOut className="mr-2 h-4 w-4" /> Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {currentUser && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="hidden gap-1.5 sm:flex rounded-lg border-border font-body text-xs">
+                  <User className="h-3.5 w-3.5" />
+                  {roleLabels[currentUser.role]}
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="border-border bg-card">
+                {currentUser.email === 'fahadyousaf90@gmail.com' ? (
+                  <>
+                    <DropdownMenuItem onClick={() => switchRole('user')} className="font-body text-sm">
+                      <User className="mr-2 h-4 w-4 text-info" /> Customer
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => switchRole('provider')} className="font-body text-sm">
+                      <Wrench className="mr-2 h-4 w-4 text-success" /> Provider
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => switchRole('admin')} className="font-body text-sm">
+                      <Shield className="mr-2 h-4 w-4 text-warning" /> Admin
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                ) : null}
+                <DropdownMenuItem onClick={logout} className="font-body text-sm text-destructive">
+                  <LogOut className="mr-2 h-4 w-4" /> Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
           <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -124,13 +130,15 @@ const Navbar = () => {
                   </Button>
                 </Link>
               ))}
-              <div className="mt-2 flex gap-1">
-                {(['user', 'provider', 'admin'] as UserRole[]).map(r => (
-                  <Button key={r} variant="outline" size="sm" onClick={() => { switchRole(r); setMobileOpen(false); }} className="flex-1 text-xs font-body capitalize rounded-lg border-border">
-                    {roleLabels[r]}
-                  </Button>
-                ))}
-              </div>
+              {currentUser?.email === 'fahadyousaf90@gmail.com' && (
+                <div className="mt-2 flex gap-1">
+                  {(['user', 'provider', 'admin'] as UserRole[]).map(r => (
+                    <Button key={r} variant="outline" size="sm" onClick={() => { switchRole(r); setMobileOpen(false); }} className="flex-1 text-xs font-body capitalize rounded-lg border-border">
+                      {roleLabels[r]}
+                    </Button>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         )}
