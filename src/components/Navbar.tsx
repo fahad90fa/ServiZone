@@ -3,9 +3,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { UserRole } from '@/types';
-import { Home, Calendar, User, LogOut, Shield, Wrench, ChevronDown, Menu, X } from 'lucide-react';
+import { Home, Calendar, User, LogOut, Shield, Wrench, ChevronDown, Menu, X, Clock } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import NotificationBell from '@/components/NotificationBell';
 
 const roleLabels: Record<UserRole, string> = { user: 'Customer', provider: 'Provider', admin: 'Admin' };
 
@@ -27,6 +28,7 @@ const Navbar = () => {
     ? [
         { to: '/provider', label: 'Dashboard', icon: Home },
         { to: '/provider/jobs', label: 'Jobs', icon: Calendar },
+        { to: '/provider/availability', label: 'Availability', icon: Clock },
         { to: '/provider/profile', label: 'Profile', icon: User },
       ]
     : [
@@ -46,15 +48,10 @@ const Navbar = () => {
           <span className="text-xl font-bold text-foreground">ServiZone</span>
         </Link>
 
-        {/* Desktop nav */}
         <div className="hidden items-center gap-1 md:flex">
           {navLinks.map(link => (
             <Link key={link.to} to={link.to}>
-              <Button
-                variant={isActive(link.to) ? 'default' : 'ghost'}
-                size="sm"
-                className="gap-2"
-              >
+              <Button variant={isActive(link.to) ? 'default' : 'ghost'} size="sm" className="gap-2">
                 <link.icon className="h-4 w-4" />
                 {link.label}
               </Button>
@@ -62,8 +59,9 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Role switcher for demo */}
+        <div className="flex items-center gap-1">
+          {currentUser && <NotificationBell />}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="hidden gap-1 sm:flex">
@@ -89,7 +87,6 @@ const Navbar = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Mobile menu */}
           <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>

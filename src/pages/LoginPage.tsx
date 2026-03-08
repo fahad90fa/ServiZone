@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -48,6 +48,11 @@ const LoginPage = () => {
             </div>
             <Button type="submit" className="w-full gradient-primary border-0 text-primary-foreground">Sign In</Button>
           </form>
+
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            Don't have an account?{' '}
+            <Link to="/signup" className="font-medium text-primary hover:underline">Sign Up</Link>
+          </p>
 
           <div className="mt-4 rounded-lg bg-muted p-3 text-xs text-muted-foreground">
             <p className="mb-1 font-medium">Demo Accounts:</p>
