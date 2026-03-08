@@ -2,8 +2,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { UserRole } from '@/types';
-import { Home, Calendar, User, LogOut, Shield, Wrench, ChevronDown, Menu, X, Clock, DollarSign, Star, HelpCircle, Info, Settings, FolderOpen } from 'lucide-react';
+import { UserRole } from '@/contexts/AuthContext';
+import { Home, Calendar, User, LogOut, Shield, Wrench, ChevronDown, Menu, X, Clock, DollarSign, Star, HelpCircle, Settings, FolderOpen } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import NotificationBell from '@/components/NotificationBell';
@@ -15,7 +15,7 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + '/');
+  const isActive = (path: string) => location.pathname === path || (path !== '/' && location.pathname.startsWith(path + '/'));
 
   const navLinks = currentUser?.role === 'admin'
     ? [
@@ -44,19 +44,27 @@ const Navbar = () => {
       ];
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 border-b border-border/50 glass">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary">
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-primary shadow-soft group-hover:shadow-glow transition-shadow duration-300">
             <Wrench className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-foreground">ServiZone</span>
+          <span className="font-sans text-xl font-bold text-foreground">Servi<span className="text-gradient">Zone</span></span>
         </Link>
 
-        <div className="hidden items-center gap-1 md:flex">
+        <div className="hidden items-center gap-0.5 md:flex">
           {navLinks.map(link => (
             <Link key={link.to} to={link.to}>
-              <Button variant={isActive(link.to) && link.to !== '/' ? 'default' : location.pathname === link.to ? 'default' : 'ghost'} size="sm" className="gap-1.5 text-xs">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`gap-1.5 text-xs font-body rounded-lg transition-all duration-200 ${
+                  isActive(link.to)
+                    ? 'bg-primary/10 text-primary font-medium'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
                 <link.icon className="h-3.5 w-3.5" />
                 {link.label}
               </Button>
@@ -64,29 +72,31 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           {currentUser && <NotificationBell />}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="hidden gap-1 sm:flex">
-                <Shield className="h-4 w-4" />
+              <Button variant="outline" size="sm" className="hidden gap-1.5 sm:flex rounded-lg border-border/60 font-body text-xs">
+                <div className="h-5 w-5 rounded-md gradient-primary flex items-center justify-center">
+                  <User className="h-3 w-3 text-primary-foreground" />
+                </div>
                 {currentUser ? roleLabels[currentUser.role] : 'Guest'}
-                <ChevronDown className="h-3 w-3" />
+                <ChevronDown className="h-3 w-3 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => switchRole('user')}>
-                <User className="mr-2 h-4 w-4" /> Switch to Customer
+            <DropdownMenuContent align="end" className="glass border-border/50 shadow-elevated">
+              <DropdownMenuItem onClick={() => switchRole('user')} className="font-body text-sm">
+                <User className="mr-2 h-4 w-4 text-info" /> Customer
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => switchRole('provider')}>
-                <Wrench className="mr-2 h-4 w-4" /> Switch to Provider
+              <DropdownMenuItem onClick={() => switchRole('provider')} className="font-body text-sm">
+                <Wrench className="mr-2 h-4 w-4 text-success" /> Provider
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => switchRole('admin')}>
-                <Shield className="mr-2 h-4 w-4" /> Switch to Admin
+              <DropdownMenuItem onClick={() => switchRole('admin')} className="font-body text-sm">
+                <Shield className="mr-2 h-4 w-4 text-warning" /> Admin
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout}>
+              <DropdownMenuItem onClick={logout} className="font-body text-sm text-destructive">
                 <LogOut className="mr-2 h-4 w-4" /> Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -104,21 +114,28 @@ const Navbar = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-border md:hidden"
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border-t border-border/50 md:hidden glass"
           >
             <div className="container flex flex-col gap-1 py-3">
               {navLinks.map(link => (
                 <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)}>
-                  <Button variant={isActive(link.to) ? 'default' : 'ghost'} size="sm" className="w-full justify-start gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={`w-full justify-start gap-2 font-body ${isActive(link.to) ? 'bg-primary/10 text-primary' : ''}`}
+                  >
                     <link.icon className="h-4 w-4" />
                     {link.label}
                   </Button>
                 </Link>
               ))}
               <div className="mt-2 flex gap-1">
-                <Button variant="outline" size="sm" onClick={() => { switchRole('user'); setMobileOpen(false); }} className="flex-1 text-xs">Customer</Button>
-                <Button variant="outline" size="sm" onClick={() => { switchRole('provider'); setMobileOpen(false); }} className="flex-1 text-xs">Provider</Button>
-                <Button variant="outline" size="sm" onClick={() => { switchRole('admin'); setMobileOpen(false); }} className="flex-1 text-xs">Admin</Button>
+                {(['user', 'provider', 'admin'] as UserRole[]).map(r => (
+                  <Button key={r} variant="outline" size="sm" onClick={() => { switchRole(r); setMobileOpen(false); }} className="flex-1 text-xs font-body capitalize rounded-lg">
+                    {roleLabels[r]}
+                  </Button>
+                ))}
               </div>
             </div>
           </motion.div>
