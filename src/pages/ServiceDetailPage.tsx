@@ -34,7 +34,7 @@ const included = [
   { label: 'Satisfaction guarantee', desc: '100% money-back promise' },
   { label: 'Eco-friendly products', desc: 'Safe for family & pets' },
   { label: 'Post-service cleanup', desc: 'We leave your space spotless' },
-  { label: 'Free re-service', desc: 'If you're not satisfied' },
+  { label: 'Free re-service', desc: 'If not satisfied' },
 ];
 
 const ServiceDetailPage = () => {
