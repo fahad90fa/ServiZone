@@ -31,11 +31,23 @@ import AdminSettingsPage from "@/pages/AdminSettingsPage";
 import LoginPage from "@/pages/LoginPage";
 import SignupPage from "@/pages/SignupPage";
 import NotFound from "@/pages/NotFound";
+import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
 
+const LoadingScreen = () => (
+  <div className="flex min-h-screen items-center justify-center gradient-hero">
+    <div className="text-center">
+      <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary" />
+      <p className="mt-4 font-body text-primary-foreground/60">Loading ServiZone...</p>
+    </div>
+  </div>
+);
+
 const AppRoutes = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, loading } = useAuth();
+
+  if (loading) return <LoadingScreen />;
 
   if (!currentUser) {
     return (
