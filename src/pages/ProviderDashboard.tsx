@@ -36,7 +36,10 @@ const ProviderDashboard = () => {
   const completed = bookings.filter(b => b.status === 'completed').length;
   const revenue = bookings.filter(b => b.status === 'completed').reduce((sum, b) => sum + Number(b.price), 0);
 
-  const handleAccept = (id: string) => updateStatus.mutate({ id, status: 'confirmed' });
+  const handleAccept = (id: string) => {
+    if (!currentUser) return;
+    updateStatus.mutate({ id, status: 'confirmed', provider_id: currentUser.id });
+  };
   const handleReject = (id: string) => updateStatus.mutate({ id, status: 'cancelled' });
   const handleUpdateStatus = (id: string, status: string) => updateStatus.mutate({ id, status });
 
