@@ -92,7 +92,7 @@ const AdminServicesPage = () => {
               </div>
               <div><Label>Description</Label><Textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><Label>Price (₹) *</Label><Input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} /></div>
+                <div><Label>Price (Rs.) *</Label><Input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} /></div>
                 <div><Label>Duration</Label><Input value={form.duration} onChange={e => setForm({...form, duration: e.target.value})} placeholder="e.g. 2 hrs" /></div>
               </div>
               <Button className="w-full" onClick={handleAdd}>Add Service</Button>
