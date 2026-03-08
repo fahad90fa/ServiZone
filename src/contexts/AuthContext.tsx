@@ -114,6 +114,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const switchRole = (role: UserRole) => {
+    roleOverrideRef.current = role;
     setRoleOverride(role);
     if (currentUser) {
       setCurrentUser({ ...currentUser, role });
