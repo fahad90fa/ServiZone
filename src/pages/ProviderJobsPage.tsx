@@ -1,13 +1,18 @@
 import { useBookings, useUpdateBookingStatus } from '@/hooks/useBookings';
+import { useAuth } from '@/contexts/AuthContext';
 import BookingCard from '@/components/BookingCard';
 import { Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ProviderJobsPage = () => {
+  const { currentUser } = useAuth();
   const { data: bookings = [], isLoading } = useBookings();
   const updateStatus = useUpdateBookingStatus();
 
-  const handleAccept = (id: string) => updateStatus.mutate({ id, status: 'confirmed' });
+  const handleAccept = (id: string) => {
+    if (!currentUser) return;
+    updateStatus.mutate({ id, status: 'confirmed', provider_id: currentUser.id });
+  };
   const handleReject = (id: string) => updateStatus.mutate({ id, status: 'cancelled' });
   const handleUpdateStatus = (id: string, status: string) => updateStatus.mutate({ id, status });
 
