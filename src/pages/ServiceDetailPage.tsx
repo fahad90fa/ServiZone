@@ -128,7 +128,7 @@ const ServiceDetailPage = () => {
               <div className="flex items-end justify-between mb-4">
                 <div>
                   <p className="font-body text-xs text-muted-foreground uppercase tracking-wider">Starting at</p>
-                  <p className="font-sans text-3xl font-bold text-foreground">₹{service.price}</p>
+                  <p className="font-sans text-3xl font-bold text-foreground">Rs. {service.price}</p>
                   <p className="font-body text-xs text-muted-foreground mt-0.5">Taxes included</p>
                 </div>
                 <div className="flex items-center gap-1.5 text-xs font-body text-success">
