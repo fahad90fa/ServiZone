@@ -50,15 +50,56 @@ export const useBookings = () => {
   return useQuery({
     queryKey: ['bookings', currentUser?.id, currentUser?.role],
     queryFn: async () => {
-      let query = supabase.from('bookings').select('*, services(name)');
-
       if (currentUser?.role === 'user') {
-        query = query.eq('user_id', currentUser.id);
-      } else if (currentUser?.role === 'provider') {
-        query = query.eq('provider_id', currentUser.id);
+        const { data, error } = await supabase
+          .from('bookings')
+          .select('*, services(name)')
+          .eq('user_id', currentUser.id)
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        return (data || []).map(b => ({
+          ...b,
+          service_name: (b.services as any)?.name || '',
+        })) as Booking[];
       }
 
-      const { data, error } = await query.order('created_at', { ascending: false });
+      if (currentUser?.role === 'provider') {
+        // Fetch bookings assigned to this provider OR unassigned pending bookings
+        const { data: assigned, error: err1 } = await supabase
+          .from('bookings')
+          .select('*, services(name)')
+          .eq('provider_id', currentUser.id)
+          .order('created_at', { ascending: false });
+
+        const { data: unassigned, error: err2 } = await supabase
+          .from('bookings')
+          .select('*, services(name)')
+          .is('provider_id', null)
+          .in('status', ['pending', 'confirmed'])
+          .order('created_at', { ascending: false });
+
+        if (err1) throw err1;
+        if (err2) throw err2;
+
+        const all = [...(assigned || []), ...(unassigned || [])];
+        // Deduplicate
+        const seen = new Set<string>();
+        const unique = all.filter(b => {
+          if (seen.has(b.id)) return false;
+          seen.add(b.id);
+          return true;
+        });
+        return unique.map(b => ({
+          ...b,
+          service_name: (b.services as any)?.name || '',
+        })) as Booking[];
+      }
+
+      // Admin - all bookings
+      const { data, error } = await supabase
+        .from('bookings')
+        .select('*, services(name)')
+        .order('created_at', { ascending: false });
       if (error) throw error;
       return (data || []).map(b => ({
         ...b,
