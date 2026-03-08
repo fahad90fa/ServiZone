@@ -2,7 +2,7 @@ import { Booking } from '@/hooks/useBookings';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, MapPin, IndianRupee } from 'lucide-react';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   pending: { label: 'Pending', className: 'bg-warning/10 text-warning border-warning/30' },
