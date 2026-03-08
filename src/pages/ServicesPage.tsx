@@ -1,51 +1,97 @@
 import { useState } from 'react';
-import { services, categories } from '@/data/mock';
+import { useServices, useCategories } from '@/hooks/useServices';
 import ServiceCard from '@/components/ServiceCard';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const fadeUp = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 
 const ServicesPage = () => {
   const navigate = useNavigate();
+  const { data: services = [], isLoading } = useServices();
+  const { data: categories = [] } = useCategories();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const filtered = services.filter(s => {
-    const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.category.toLowerCase().includes(search.toLowerCase());
-    const matchCat = !activeCategory || s.categoryId === activeCategory;
+    const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || (s.category_name || '').toLowerCase().includes(search.toLowerCase());
+    const matchCat = !activeCategory || s.category_id === activeCategory;
     return matchSearch && matchCat;
   });
 
   return (
-    <div className="container py-8">
-      <h1 className="mb-2 text-3xl font-bold text-foreground">All Services</h1>
-      <p className="mb-6 text-muted-foreground">Find and book the service you need</p>
+    <div className="container py-10">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <h1 className="mb-2 font-sans text-4xl font-bold text-foreground">All Services</h1>
+        <p className="mb-8 font-body text-muted-foreground">Find and book the perfect service for your needs</p>
+      </motion.div>
 
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="mb-8 flex flex-col gap-4 sm:flex-row"
+      >
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Search services..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
+          <Input
+            placeholder="Search services..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="pl-10 bg-card/50 border-border/60 font-body rounded-xl"
+          />
         </div>
-      </div>
+      </motion.div>
 
-      <div className="mb-6 flex flex-wrap gap-2">
-        <Button size="sm" variant={!activeCategory ? 'default' : 'outline'} onClick={() => setActiveCategory(null)}>All</Button>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.15 }}
+        className="mb-8 flex flex-wrap gap-2"
+      >
+        <Button
+          size="sm"
+          variant={!activeCategory ? 'default' : 'outline'}
+          onClick={() => setActiveCategory(null)}
+          className={`font-body rounded-lg ${!activeCategory ? 'gradient-primary border-0 text-primary-foreground' : 'border-border/60'}`}
+        >
+          All
+        </Button>
         {categories.map(cat => (
-          <Button key={cat.id} size="sm" variant={activeCategory === cat.id ? 'default' : 'outline'} onClick={() => setActiveCategory(cat.id)}>
+          <Button
+            key={cat.id}
+            size="sm"
+            variant={activeCategory === cat.id ? 'default' : 'outline'}
+            onClick={() => setActiveCategory(cat.id)}
+            className={`font-body rounded-lg ${activeCategory === cat.id ? 'gradient-primary border-0 text-primary-foreground' : 'border-border/60'}`}
+          >
             {cat.name}
           </Button>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map(service => (
-          <ServiceCard key={service.id} service={service} onBook={() => navigate(`/book/${service.id}`)} />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3, 4, 5, 6].map(i => (
+            <div key={i} className="h-80 rounded-2xl bg-muted animate-pulse" />
+          ))}
+        </div>
+      ) : (
+        <motion.div initial="hidden" animate="show" variants={stagger} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map(service => (
+            <motion.div key={service.id} variants={fadeUp}>
+              <ServiceCard service={service} onBook={() => navigate(`/book/${service.id}`)} />
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
 
-      {filtered.length === 0 && (
-        <div className="py-20 text-center text-muted-foreground">No services found matching your search.</div>
+      {!isLoading && filtered.length === 0 && (
+        <div className="py-20 text-center font-body text-muted-foreground">No services found matching your search.</div>
       )}
     </div>
   );

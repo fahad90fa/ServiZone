@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { LucideIcon } from 'lucide-react';
+import { TrendingUp, TrendingDown, LucideIcon } from 'lucide-react';
 
 interface StatCardProps {
   title: string;
@@ -10,19 +10,20 @@ interface StatCardProps {
 }
 
 const StatCard = ({ title, value, icon: Icon, trend, trendUp }: StatCardProps) => (
-  <Card className="border border-border p-5 shadow-card">
+  <Card className="glass border-border/50 p-5 shadow-soft hover-lift noise group">
     <div className="flex items-start justify-between">
       <div>
-        <p className="text-sm text-muted-foreground">{title}</p>
-        <p className="mt-1 text-2xl font-bold text-foreground">{value}</p>
+        <p className="font-body text-xs text-muted-foreground uppercase tracking-wider">{title}</p>
+        <p className="mt-1 font-sans text-2xl font-bold text-foreground">{value}</p>
         {trend && (
-          <p className={`mt-1 text-xs font-medium ${trendUp ? 'text-success' : 'text-destructive'}`}>
-            {trendUp ? '↑' : '↓'} {trend}
+          <p className={`mt-1 flex items-center gap-1 font-body text-xs ${trendUp ? 'text-success' : 'text-destructive'}`}>
+            {trendUp ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+            {trend}
           </p>
         )}
       </div>
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-        <Icon className="h-5 w-5 text-primary" />
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/8 group-hover:gradient-primary group-hover:shadow-glow transition-all duration-300">
+        <Icon className="h-5 w-5 text-primary group-hover:text-primary-foreground transition-colors" />
       </div>
     </div>
   </Card>
