@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { bookings as initialBookings } from '@/data/mock';
 import BookingCard from '@/components/BookingCard';
 import { Button } from '@/components/ui/button';
-import { Booking } from '@/types';
 
 const tabs = ['all', 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled'] as const;
 
 const UserBookingsPage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>('all');
   const userBookings = initialBookings.filter(b => b.userId === 'u1');
 
@@ -27,7 +28,9 @@ const UserBookingsPage = () => {
 
       <div className="grid gap-4 md:grid-cols-2">
         {filtered.map(booking => (
-          <BookingCard key={booking.id} booking={booking} perspective="user" />
+          <div key={booking.id} className="cursor-pointer" onClick={() => navigate(`/track/${booking.id}`)}>
+            <BookingCard booking={booking} perspective="user" />
+          </div>
         ))}
       </div>
 
