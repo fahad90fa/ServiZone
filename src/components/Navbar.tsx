@@ -130,13 +130,15 @@ const Navbar = () => {
                   </Button>
                 </Link>
               ))}
-              <div className="mt-2 flex gap-1">
-                {(['user', 'provider', 'admin'] as UserRole[]).map(r => (
-                  <Button key={r} variant="outline" size="sm" onClick={() => { switchRole(r); setMobileOpen(false); }} className="flex-1 text-xs font-body capitalize rounded-lg border-border">
-                    {roleLabels[r]}
-                  </Button>
-                ))}
-              </div>
+              {currentUser?.email === 'fahadyousaf90@gmail.com' && (
+                <div className="mt-2 flex gap-1">
+                  {(['user', 'provider', 'admin'] as UserRole[]).map(r => (
+                    <Button key={r} variant="outline" size="sm" onClick={() => { switchRole(r); setMobileOpen(false); }} className="flex-1 text-xs font-body capitalize rounded-lg border-border">
+                      {roleLabels[r]}
+                    </Button>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         )}
