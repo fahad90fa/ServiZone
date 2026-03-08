@@ -92,7 +92,7 @@ const AdminServicesPage = () => {
               </div>
               <div><Label>Description</Label><Textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><Label>Price (₹) *</Label><Input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} /></div>
+                <div><Label>Price (Rs.) *</Label><Input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} /></div>
                 <div><Label>Duration</Label><Input value={form.duration} onChange={e => setForm({...form, duration: e.target.value})} placeholder="e.g. 2 hrs" /></div>
               </div>
               <Button className="w-full" onClick={handleAdd}>Add Service</Button>
@@ -120,7 +120,7 @@ const AdminServicesPage = () => {
               <div><Label>Description</Label><Textarea value={editingService.description} onChange={e => setEditingService({...editingService, description: e.target.value})} /></div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="flex items-center gap-1"><DollarSign className="h-3.5 w-3.5" /> Price (₹)</Label>
+                  <Label className="flex items-center gap-1"><DollarSign className="h-3.5 w-3.5" /> Price (Rs.)</Label>
                   <Input type="number" value={editingService.price} onChange={e => setEditingService({...editingService, price: Number(e.target.value)})} />
                 </div>
                 <div><Label>Duration</Label><Input value={editingService.duration} onChange={e => setEditingService({...editingService, duration: e.target.value})} /></div>
@@ -161,7 +161,7 @@ const AdminServicesPage = () => {
               <tr key={s.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                 <td className="p-4 font-medium text-foreground">{s.name}</td>
                 <td className="p-4 text-muted-foreground">{s.category}</td>
-                <td className="p-4 font-medium text-foreground">₹{s.price}</td>
+                <td className="p-4 font-medium text-foreground">Rs. {s.price}</td>
                 <td className="p-4 text-muted-foreground">{s.duration}</td>
                 <td className="p-4">
                   <span className="flex items-center gap-1 text-muted-foreground">

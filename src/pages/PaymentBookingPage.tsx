@@ -216,15 +216,15 @@ const PaymentBookingPage = () => {
                     <div className="mt-4 space-y-2 font-body text-sm border-t border-border/50 pt-4">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Service fee</span>
-                        <span className="text-foreground">&#8377;{service.price}</span>
+                        <span className="text-foreground">Rs. {service.price}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">GST (18%)</span>
-                        <span className="text-foreground">&#8377;{tax}</span>
+                        <span className="text-foreground">Rs. {tax}</span>
                       </div>
                       <div className="flex justify-between border-t border-border/50 pt-2 font-semibold">
                         <span className="text-foreground">Total</span>
-                        <span className="text-primary font-sans text-lg">&#8377;{total}</span>
+                        <span className="text-primary font-sans text-lg">Rs. {total}</span>
                       </div>
                     </div>
 
@@ -252,9 +252,9 @@ const PaymentBookingPage = () => {
 
                 <div className="space-y-3">
                   {[
-                    { key: 'card' as const, label: 'Credit / Debit Card', icon: CreditCard, desc: 'Visa, Mastercard, RuPay' },
-                    { key: 'upi' as const, label: 'UPI', icon: Smartphone, desc: 'Google Pay, PhonePe, Paytm' },
-                    { key: 'netbanking' as const, label: 'Net Banking', icon: Building, desc: 'All major banks supported' },
+                    { key: 'card' as const, label: 'Credit / Debit Card', icon: CreditCard, desc: 'Visa, Mastercard' },
+                    { key: 'upi' as const, label: 'JazzCash / Easypaisa', icon: Smartphone, desc: 'Mobile wallets' },
+                    { key: 'netbanking' as const, label: 'Bank Transfer', icon: Building, desc: 'All major banks supported' },
                   ].map(method => (
                     <div
                       key={method.key}
@@ -312,8 +312,8 @@ const PaymentBookingPage = () => {
                   {paymentMethod === 'upi' && (
                     <motion.div key="upi-fields" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
                       <div className="mt-4 rounded-xl border border-border/50 bg-secondary/20 p-4">
-                        <Label className="mb-1.5 font-body text-sm text-foreground">UPI ID</Label>
-                        <Input placeholder="yourname@paytm" className="bg-background border-border font-body rounded-xl h-11" />
+                        <Label className="mb-1.5 font-body text-sm text-foreground">Mobile Wallet Number</Label>
+                        <Input placeholder="03XX-XXXXXXX" className="bg-background border-border font-body rounded-xl h-11" />
                       </div>
                     </motion.div>
                   )}
@@ -338,15 +338,15 @@ const PaymentBookingPage = () => {
                   <div className="space-y-2.5 font-body text-sm mb-4">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Service fee</span>
-                      <span className="text-foreground">&#8377;{service.price}</span>
+                      <span className="text-foreground">Rs. {service.price}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">GST (18%)</span>
-                      <span className="text-foreground">&#8377;{tax}</span>
+                      <span className="text-foreground">Rs. {tax}</span>
                     </div>
                     <div className="flex justify-between border-t border-border/50 pt-2.5 font-semibold">
                       <span className="text-foreground">Total</span>
-                      <span className="text-primary font-sans text-lg">&#8377;{total}</span>
+                      <span className="text-primary font-sans text-lg">Rs. {total}</span>
                     </div>
                   </div>
 
@@ -365,7 +365,7 @@ const PaymentBookingPage = () => {
                     {processing ? (
                       <span className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Processing...</span>
                     ) : (
-                      <>Pay &#8377;{total}</>
+                      <>Pay Rs. {total}</>
                     )}
                   </Button>
 
@@ -416,11 +416,11 @@ const PaymentBookingPage = () => {
                     </div>
                     <div>
                       <p className="text-muted-foreground">Amount Paid</p>
-                      <p className="text-foreground font-medium">&#8377;{total}</p>
+                      <p className="text-foreground font-medium">Rs. {total}</p>
                     </div>
                     <div>
                       <p className="text-muted-foreground">Payment</p>
-                      <p className="text-foreground font-medium capitalize">{paymentMethod === 'upi' ? 'UPI' : paymentMethod === 'netbanking' ? 'Net Banking' : 'Card'}</p>
+                      <p className="text-foreground font-medium capitalize">{paymentMethod === 'upi' ? 'JazzCash/Easypaisa' : paymentMethod === 'netbanking' ? 'Bank Transfer' : 'Card'}</p>
                     </div>
                   </div>
                   <div className="font-body text-xs border-t border-border/50 pt-3">

@@ -28,9 +28,9 @@ const ProviderEarningsPage = () => {
       <p className="mb-6 text-muted-foreground">Track your income and payment history</p>
 
       <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard title="Total Earnings" value={`₹${totalEarnings.toLocaleString()}`} icon={DollarSign} />
-        <StatCard title="Platform Fee (15%)" value={`₹${platformFee.toLocaleString()}`} icon={TrendingUp} />
-        <StatCard title="Net Earnings" value={`₹${netEarnings.toLocaleString()}`} icon={DollarSign} trend="Net after fees" trendUp />
+        <StatCard title="Total Earnings" value={`Rs. ${totalEarnings.toLocaleString()}`} icon={DollarSign} />
+        <StatCard title="Platform Fee (15%)" value={`Rs. ${platformFee.toLocaleString()}`} icon={TrendingUp} />
+        <StatCard title="Net Earnings" value={`Rs. ${netEarnings.toLocaleString()}`} icon={DollarSign} trend="Net after fees" trendUp />
         <StatCard title="Jobs Completed" value={completed.length} icon={CheckCircle} />
       </div>
 
@@ -42,7 +42,7 @@ const ProviderEarningsPage = () => {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 13% 91%)" />
               <XAxis dataKey="month" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
-              <Tooltip formatter={(value: number) => [`₹${value.toLocaleString()}`, 'Earnings']} />
+              <Tooltip formatter={(value: number) => [`Rs. ${value.toLocaleString()}`, 'Earnings']} />
               <Bar dataKey="earnings" fill="hsl(250 84% 54%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -63,7 +63,7 @@ const ProviderEarningsPage = () => {
                   <p className="text-xs text-muted-foreground">{b.date}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-foreground">₹{b.price}</p>
+                  <p className="text-sm font-semibold text-foreground">Rs. {b.price}</p>
                   <Badge variant="outline" className="bg-success/10 text-success border-success/30 text-xs">Paid</Badge>
                 </div>
               </motion.div>

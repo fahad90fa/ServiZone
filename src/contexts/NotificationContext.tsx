@@ -21,7 +21,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 
 const initialNotifications: Notification[] = [
   { id: 'n1', title: 'Booking Confirmed', message: 'Your Deep Home Cleaning has been confirmed for Mar 10.', time: '5 min ago', read: false, type: 'booking' },
-  { id: 'n2', title: 'Payment Received', message: 'Payment of ₹1,499 received for booking #b1.', time: '10 min ago', read: false, type: 'payment' },
+  { id: 'n2', title: 'Payment Received', message: 'Payment of Rs. 1,499 received for booking #b1.', time: '10 min ago', read: false, type: 'payment' },
   { id: 'n3', title: 'New Job Available', message: 'A new Pest Treatment job is available in your area.', time: '1 hr ago', read: false, type: 'booking' },
   { id: 'n4', title: 'Service Completed', message: 'Your AC Repair has been marked as completed. Please rate the service.', time: '2 hrs ago', read: true, type: 'booking' },
   { id: 'n5', title: 'Welcome to ServiZone!', message: 'Start browsing our services and book your first appointment.', time: '1 day ago', read: true, type: 'system' },

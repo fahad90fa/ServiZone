@@ -77,7 +77,7 @@ const ServiceCard = ({ service, onBook }: ServiceCardProps) => {
         </div>
 
         <div className="flex items-center justify-between border-t border-border pt-3">
-          <span className="font-sans text-xl font-bold text-foreground">₹{service.price}</span>
+          <span className="font-sans text-xl font-bold text-foreground">Rs. {service.price}</span>
           <div className="flex gap-2">
             <Button size="sm" variant="ghost" onClick={() => navigate(`/service/${service.id}`)} className="font-body text-xs text-muted-foreground hover:text-primary">
               Details <ArrowRight className="ml-1 h-3 w-3" />

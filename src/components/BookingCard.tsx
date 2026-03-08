@@ -2,7 +2,7 @@ import { Booking } from '@/hooks/useBookings';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, MapPin, IndianRupee } from 'lucide-react';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   pending: { label: 'Pending', className: 'bg-warning/10 text-warning border-warning/30' },
@@ -53,8 +53,7 @@ const BookingCard = ({ booking, showActions, onAccept, onReject, onUpdateStatus,
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
         <div className="flex items-center gap-1 font-sans font-semibold text-foreground">
-          <IndianRupee className="h-4 w-4" />
-          {booking.price}
+          Rs. {booking.price}
         </div>
 
         {showActions && booking.status === 'pending' && (
