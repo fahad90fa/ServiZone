@@ -120,7 +120,7 @@ const AdminServicesPage = () => {
               <div><Label>Description</Label><Textarea value={editingService.description} onChange={e => setEditingService({...editingService, description: e.target.value})} /></div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="flex items-center gap-1"><DollarSign className="h-3.5 w-3.5" /> Price (₹)</Label>
+                  <Label className="flex items-center gap-1"><DollarSign className="h-3.5 w-3.5" /> Price (Rs.)</Label>
                   <Input type="number" value={editingService.price} onChange={e => setEditingService({...editingService, price: Number(e.target.value)})} />
                 </div>
                 <div><Label>Duration</Label><Input value={editingService.duration} onChange={e => setEditingService({...editingService, duration: e.target.value})} /></div>
