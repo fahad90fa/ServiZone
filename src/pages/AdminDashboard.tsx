@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import StatCard from '@/components/StatCard';
 import { Card } from '@/components/ui/card';
-import { Users, Calendar, DollarSign, Wrench, Clock, TrendingUp, Loader2 } from 'lucide-react';
+import { Users, Calendar, DollarSign, Wrench, Clock, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { motion } from 'framer-motion';
 
@@ -11,7 +11,7 @@ const barData = [
   { name: 'Thu', bookings: 28 }, { name: 'Fri', bookings: 42 }, { name: 'Sat', bookings: 38 }, { name: 'Sun', bookings: 22 },
 ];
 
-const COLORS = ['hsl(152 69% 40%)', 'hsl(265 90% 62%)', 'hsl(37 95% 55%)', 'hsl(0 72% 51%)'];
+const COLORS = ['hsl(152 60% 42%)', 'hsl(38 92% 50%)', 'hsl(210 80% 55%)', 'hsl(0 62% 50%)'];
 
 const AdminDashboard = () => {
   const { data: bookings = [] } = useQuery({
@@ -52,54 +52,44 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="container py-10">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        <p className="font-body text-sm font-medium text-primary mb-2 tracking-wider uppercase">Overview</p>
-        <h1 className="mb-2 font-sans text-4xl font-bold text-foreground">Admin Dashboard</h1>
-        <p className="mb-8 font-body text-muted-foreground">Real-time platform overview</p>
+    <div className="container py-8">
+      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+        <p className="font-body text-xs font-semibold uppercase tracking-widest text-primary mb-1">Overview</p>
+        <h1 className="mb-1 font-sans text-3xl font-bold text-foreground">Admin Dashboard</h1>
+        <p className="mb-6 font-body text-sm text-muted-foreground">Real-time platform overview</p>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.5 }}
-        className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6"
-      >
+      <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         <StatCard title="Total Bookings" value={bookings.length} icon={Calendar} trend="Live data" trendUp />
         <StatCard title="Pending" value={pending} icon={Clock} />
         <StatCard title="Completed" value={completed} icon={TrendingUp} />
         <StatCard title="Total Users" value={profiles.length} icon={Users} />
         <StatCard title="Services" value={services.length} icon={Wrench} />
         <StatCard title="Revenue" value={`₹${totalRevenue.toLocaleString()}`} icon={DollarSign} trend="From completed" trendUp />
-      </motion.div>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="grid gap-6 lg:grid-cols-3"
-      >
-        <Card className="col-span-2 glass-dark border-border/30 p-5 shadow-elevated">
-          <h3 className="mb-4 font-sans font-semibold text-foreground">Bookings This Week</h3>
-          <ResponsiveContainer width="100%" height={280}>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Card className="col-span-2 border-border bg-card p-5">
+          <h3 className="mb-4 font-sans text-sm font-semibold text-foreground">Bookings This Week</h3>
+          <ResponsiveContainer width="100%" height={260}>
             <BarChart data={barData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(228 12% 16%)" />
-              <XAxis dataKey="name" tick={{ fontSize: 12, fill: 'hsl(220 10% 50%)' }} />
-              <YAxis tick={{ fontSize: 12, fill: 'hsl(220 10% 50%)' }} />
-              <Tooltip contentStyle={{ background: 'hsl(228 16% 10%)', border: '1px solid hsl(228 12% 16%)', borderRadius: '12px', color: 'hsl(210 20% 92%)' }} />
-              <Bar dataKey="bookings" fill="hsl(265 90% 62%)" radius={[8, 8, 0, 0]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(240 4% 15%)" />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'hsl(240 5% 45%)' }} />
+              <YAxis tick={{ fontSize: 11, fill: 'hsl(240 5% 45%)' }} />
+              <Tooltip contentStyle={{ background: 'hsl(240 5% 9%)', border: '1px solid hsl(240 4% 15%)', borderRadius: '8px', color: 'hsl(40 10% 92%)', fontSize: 13 }} />
+              <Bar dataKey="bookings" fill="hsl(38 92% 50%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
 
-        <Card className="glass-dark border-border/30 p-5 shadow-elevated">
-          <h3 className="mb-4 font-sans font-semibold text-foreground">Status Distribution</h3>
-          <ResponsiveContainer width="100%" height={220}>
+        <Card className="border-border bg-card p-5">
+          <h3 className="mb-4 font-sans text-sm font-semibold text-foreground">Status Distribution</h3>
+          <ResponsiveContainer width="100%" height={200}>
             <PieChart>
-              <Pie data={pieData} innerRadius={50} outerRadius={80} paddingAngle={4} dataKey="value">
+              <Pie data={pieData} innerRadius={45} outerRadius={75} paddingAngle={3} dataKey="value">
                 {pieData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
               </Pie>
-              <Tooltip contentStyle={{ background: 'hsl(228 16% 10%)', border: '1px solid hsl(228 12% 16%)', borderRadius: '12px', color: 'hsl(210 20% 92%)' }} />
+              <Tooltip contentStyle={{ background: 'hsl(240 5% 9%)', border: '1px solid hsl(240 4% 15%)', borderRadius: '8px', color: 'hsl(40 10% 92%)', fontSize: 13 }} />
             </PieChart>
           </ResponsiveContainer>
           <div className="mt-2 space-y-1.5">
@@ -112,51 +102,49 @@ const AdminDashboard = () => {
             ))}
           </div>
         </Card>
-      </motion.div>
+      </div>
 
-      {/* Recent bookings */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-        <Card className="mt-6 glass-dark border-border/30 p-5 shadow-elevated">
-          <h3 className="mb-4 font-sans font-semibold text-foreground">Recent Bookings</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full font-body text-sm">
-              <thead>
-                <tr className="border-b border-border/30 text-left text-muted-foreground">
-                  <th className="pb-3 font-medium">Customer</th>
-                  <th className="pb-3 font-medium">Service</th>
-                  <th className="pb-3 font-medium">Date</th>
-                  <th className="pb-3 font-medium">Amount</th>
-                  <th className="pb-3 font-medium">Status</th>
+      {/* Recent bookings table */}
+      <Card className="mt-4 border-border bg-card p-5">
+        <h3 className="mb-4 font-sans text-sm font-semibold text-foreground">Recent Bookings</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full font-body text-sm">
+            <thead>
+              <tr className="border-b border-border text-left text-muted-foreground">
+                <th className="pb-3 font-medium">Customer</th>
+                <th className="pb-3 font-medium">Service</th>
+                <th className="pb-3 font-medium">Date</th>
+                <th className="pb-3 font-medium">Amount</th>
+                <th className="pb-3 font-medium">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bookings.slice(0, 5).map((b: any) => (
+                <tr key={b.id} className="border-b border-border/50 last:border-0 hover:bg-secondary/50 transition-colors">
+                  <td className="py-3 text-foreground">{(b.profiles as any)?.name || 'Unknown'}</td>
+                  <td className="py-3 text-foreground">{(b.services as any)?.name || 'Unknown'}</td>
+                  <td className="py-3 text-muted-foreground">{b.scheduled_date}</td>
+                  <td className="py-3 font-medium text-foreground">₹{b.price}</td>
+                  <td className="py-3">
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
+                      b.status === 'completed' ? 'bg-success/10 text-success' :
+                      b.status === 'pending' ? 'bg-warning/10 text-warning' :
+                      b.status === 'in_progress' ? 'bg-primary/10 text-primary' :
+                      b.status === 'confirmed' ? 'bg-info/10 text-info' :
+                      'bg-destructive/10 text-destructive'
+                    }`}>
+                      {b.status.replace('_', ' ')}
+                    </span>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {bookings.slice(0, 5).map((b: any) => (
-                  <tr key={b.id} className="border-b border-border/20 last:border-0 hover:bg-secondary/30 transition-colors">
-                    <td className="py-3 text-foreground">{(b.profiles as any)?.name || 'Unknown'}</td>
-                    <td className="py-3 text-foreground">{(b.services as any)?.name || 'Unknown'}</td>
-                    <td className="py-3 text-muted-foreground">{b.scheduled_date}</td>
-                    <td className="py-3 font-medium text-foreground">₹{b.price}</td>
-                    <td className="py-3">
-                      <span className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
-                        b.status === 'completed' ? 'bg-success/10 text-success' :
-                        b.status === 'pending' ? 'bg-warning/10 text-warning' :
-                        b.status === 'in_progress' ? 'bg-primary/10 text-primary' :
-                        b.status === 'confirmed' ? 'bg-info/10 text-info' :
-                        'bg-destructive/10 text-destructive'
-                      }`}>
-                        {b.status.replace('_', ' ')}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-                {bookings.length === 0 && (
-                  <tr><td colSpan={5} className="py-8 text-center text-muted-foreground">No bookings yet</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-      </motion.div>
+              ))}
+              {bookings.length === 0 && (
+                <tr><td colSpan={5} className="py-8 text-center text-muted-foreground">No bookings yet</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </div>
   );
 };
