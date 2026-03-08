@@ -338,15 +338,15 @@ const PaymentBookingPage = () => {
                   <div className="space-y-2.5 font-body text-sm mb-4">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Service fee</span>
-                      <span className="text-foreground">&#8377;{service.price}</span>
+                      <span className="text-foreground">Rs. {service.price}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">GST (18%)</span>
-                      <span className="text-foreground">&#8377;{tax}</span>
+                      <span className="text-foreground">Rs. {tax}</span>
                     </div>
                     <div className="flex justify-between border-t border-border/50 pt-2.5 font-semibold">
                       <span className="text-foreground">Total</span>
-                      <span className="text-primary font-sans text-lg">&#8377;{total}</span>
+                      <span className="text-primary font-sans text-lg">Rs. {total}</span>
                     </div>
                   </div>
 
