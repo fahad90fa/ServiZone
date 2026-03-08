@@ -44,10 +44,10 @@ const Navbar = () => {
       ];
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border/50 glass">
+    <nav className="sticky top-0 z-50 border-b border-border/40 glass-dark">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-primary shadow-soft group-hover:shadow-glow transition-shadow duration-300">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-primary shadow-glow transition-all duration-300 group-hover:scale-110">
             <Wrench className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="font-sans text-xl font-bold text-foreground">Servi<span className="text-gradient">Zone</span></span>
@@ -59,10 +59,10 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`gap-1.5 text-xs font-body rounded-lg transition-all duration-200 ${
+                className={`gap-1.5 text-xs font-body rounded-lg transition-all duration-300 ${
                   isActive(link.to)
-                    ? 'bg-primary/10 text-primary font-medium'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'bg-primary/15 text-primary font-medium shadow-soft'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                 }`}
               >
                 <link.icon className="h-3.5 w-3.5" />
@@ -77,7 +77,7 @@ const Navbar = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="hidden gap-1.5 sm:flex rounded-lg border-border/60 font-body text-xs">
+              <Button variant="outline" size="sm" className="hidden gap-1.5 sm:flex rounded-xl border-border/60 font-body text-xs hover:border-primary/40 transition-all duration-300">
                 <div className="h-5 w-5 rounded-md gradient-primary flex items-center justify-center">
                   <User className="h-3 w-3 text-primary-foreground" />
                 </div>
@@ -85,24 +85,24 @@ const Navbar = () => {
                 <ChevronDown className="h-3 w-3 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="glass border-border/50 shadow-elevated">
-              <DropdownMenuItem onClick={() => switchRole('user')} className="font-body text-sm">
+            <DropdownMenuContent align="end" className="glass-dark border-border/40 shadow-elevated">
+              <DropdownMenuItem onClick={() => switchRole('user')} className="font-body text-sm hover:bg-primary/10">
                 <User className="mr-2 h-4 w-4 text-info" /> Customer
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => switchRole('provider')} className="font-body text-sm">
+              <DropdownMenuItem onClick={() => switchRole('provider')} className="font-body text-sm hover:bg-primary/10">
                 <Wrench className="mr-2 h-4 w-4 text-success" /> Provider
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => switchRole('admin')} className="font-body text-sm">
+              <DropdownMenuItem onClick={() => switchRole('admin')} className="font-body text-sm hover:bg-primary/10">
                 <Shield className="mr-2 h-4 w-4 text-warning" /> Admin
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="font-body text-sm text-destructive">
+              <DropdownMenuSeparator className="bg-border/40" />
+              <DropdownMenuItem onClick={logout} className="font-body text-sm text-destructive hover:bg-destructive/10">
                 <LogOut className="mr-2 h-4 w-4" /> Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+          <Button variant="ghost" size="sm" className="md:hidden hover:bg-secondary/50" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
@@ -115,7 +115,7 @@ const Navbar = () => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-border/50 md:hidden glass"
+            className="overflow-hidden border-t border-border/40 md:hidden glass-dark"
           >
             <div className="container flex flex-col gap-1 py-3">
               {navLinks.map(link => (
@@ -123,7 +123,7 @@ const Navbar = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={`w-full justify-start gap-2 font-body ${isActive(link.to) ? 'bg-primary/10 text-primary' : ''}`}
+                    className={`w-full justify-start gap-2 font-body ${isActive(link.to) ? 'bg-primary/15 text-primary' : 'hover:bg-secondary/50'}`}
                   >
                     <link.icon className="h-4 w-4" />
                     {link.label}
@@ -132,7 +132,7 @@ const Navbar = () => {
               ))}
               <div className="mt-2 flex gap-1">
                 {(['user', 'provider', 'admin'] as UserRole[]).map(r => (
-                  <Button key={r} variant="outline" size="sm" onClick={() => { switchRole(r); setMobileOpen(false); }} className="flex-1 text-xs font-body capitalize rounded-lg">
+                  <Button key={r} variant="outline" size="sm" onClick={() => { switchRole(r); setMobileOpen(false); }} className="flex-1 text-xs font-body capitalize rounded-lg border-border/60 hover:border-primary/40">
                     {roleLabels[r]}
                   </Button>
                 ))}

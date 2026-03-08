@@ -28,7 +28,7 @@ const ServiceDetailPage = () => {
 
   return (
     <div className="container max-w-4xl py-10">
-      <Button variant="ghost" className="mb-4 gap-2 font-body rounded-lg" onClick={() => navigate(-1)}>
+      <Button variant="ghost" className="mb-4 gap-2 font-body rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50" onClick={() => navigate(-1)}>
         <ArrowLeft className="h-4 w-4" /> Back
       </Button>
 
@@ -37,9 +37,11 @@ const ServiceDetailPage = () => {
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
-        <Card className="overflow-hidden border border-border/60 shadow-elevated noise">
+        <Card className="overflow-hidden border border-border/30 shadow-elevated">
           <div className="gradient-primary p-10 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(280_78%_60%_/_0.4),transparent_60%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(285_80%_65%_/_0.4),transparent_60%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,hsl(30_100%_55%_/_0.1),transparent_60%)]" />
+            <div className="absolute inset-0 animate-shimmer" />
             <div className="relative flex flex-col md:flex-row items-start justify-between gap-4">
               <div>
                 <Badge variant="outline" className="mb-3 border-primary-foreground/20 text-primary-foreground/90 font-body">{service.category_name}</Badge>
@@ -57,7 +59,7 @@ const ServiceDetailPage = () => {
             </div>
           </div>
 
-          <div className="p-8">
+          <div className="p-8 bg-card">
             <h2 className="mb-3 font-sans text-lg font-semibold text-foreground">About this service</h2>
             <p className="mb-6 font-body text-muted-foreground leading-relaxed">{service.description}</p>
 
@@ -71,19 +73,19 @@ const ServiceDetailPage = () => {
               ))}
             </div>
 
-            <div className="mb-6 rounded-2xl bg-success/5 border border-success/20 p-4">
+            <div className="mb-6 rounded-2xl bg-success/5 border border-success/15 p-4">
               <div className="flex items-center gap-2 font-sans text-sm font-medium text-foreground">
                 <Shield className="h-4 w-4 text-success" /> ServiZone Guarantee
               </div>
               <p className="mt-1 font-body text-sm text-muted-foreground">All services are backed by our quality guarantee. If you're not satisfied, we'll make it right.</p>
             </div>
 
-            <div className="flex items-center justify-between border-t border-border/50 pt-6">
+            <div className="flex items-center justify-between border-t border-border/30 pt-6">
               <div>
                 <p className="font-sans text-3xl font-bold text-foreground">₹{service.price}</p>
                 <p className="font-body text-sm text-muted-foreground">{service.duration} • Taxes included</p>
               </div>
-              <Button size="lg" className="gradient-primary border-0 text-primary-foreground shadow-glow hover:shadow-elevated transition-all rounded-xl px-8 font-body" onClick={() => navigate(`/book/${service.id}`)}>
+              <Button size="lg" className="gradient-primary border-0 text-primary-foreground shadow-glow hover:shadow-elevated transition-all duration-500 rounded-2xl px-8 font-body" onClick={() => navigate(`/book/${service.id}`)}>
                 Book Now
               </Button>
             </div>
@@ -97,7 +99,7 @@ const ServiceDetailPage = () => {
               {relatedServices.map(s => (
                 <Card
                   key={s.id}
-                  className="cursor-pointer border border-border/60 p-4 shadow-soft hover-lift noise font-body"
+                  className="cursor-pointer border border-border/30 bg-card/60 p-4 shadow-card hover-lift glow-border font-body"
                   onClick={() => navigate(`/service/${s.id}`)}
                 >
                   <div className="flex items-center justify-between">

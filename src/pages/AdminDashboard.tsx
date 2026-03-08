@@ -11,7 +11,7 @@ const barData = [
   { name: 'Thu', bookings: 28 }, { name: 'Fri', bookings: 42 }, { name: 'Sat', bookings: 38 }, { name: 'Sun', bookings: 22 },
 ];
 
-const COLORS = ['hsl(152 69% 40%)', 'hsl(262 83% 58%)', 'hsl(37 95% 55%)', 'hsl(0 84% 60%)'];
+const COLORS = ['hsl(152 69% 40%)', 'hsl(265 90% 62%)', 'hsl(37 95% 55%)', 'hsl(0 72% 51%)'];
 
 const AdminDashboard = () => {
   const { data: bookings = [] } = useQuery({
@@ -54,6 +54,7 @@ const AdminDashboard = () => {
   return (
     <div className="container py-10">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <p className="font-body text-sm font-medium text-primary mb-2 tracking-wider uppercase">Overview</p>
         <h1 className="mb-2 font-sans text-4xl font-bold text-foreground">Admin Dashboard</h1>
         <p className="mb-8 font-body text-muted-foreground">Real-time platform overview</p>
       </motion.div>
@@ -78,30 +79,30 @@ const AdminDashboard = () => {
         transition={{ delay: 0.2, duration: 0.5 }}
         className="grid gap-6 lg:grid-cols-3"
       >
-        <Card className="col-span-2 glass border-border/50 p-5 shadow-elevated noise">
+        <Card className="col-span-2 glass-dark border-border/30 p-5 shadow-elevated">
           <h3 className="mb-4 font-sans font-semibold text-foreground">Bookings This Week</h3>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={barData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 13% 90%)" />
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
-              <Tooltip />
-              <Bar dataKey="bookings" fill="hsl(262 83% 58%)" radius={[8, 8, 0, 0]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(228 12% 16%)" />
+              <XAxis dataKey="name" tick={{ fontSize: 12, fill: 'hsl(220 10% 50%)' }} />
+              <YAxis tick={{ fontSize: 12, fill: 'hsl(220 10% 50%)' }} />
+              <Tooltip contentStyle={{ background: 'hsl(228 16% 10%)', border: '1px solid hsl(228 12% 16%)', borderRadius: '12px', color: 'hsl(210 20% 92%)' }} />
+              <Bar dataKey="bookings" fill="hsl(265 90% 62%)" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
 
-        <Card className="glass border-border/50 p-5 shadow-elevated noise">
+        <Card className="glass-dark border-border/30 p-5 shadow-elevated">
           <h3 className="mb-4 font-sans font-semibold text-foreground">Status Distribution</h3>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie data={pieData} innerRadius={50} outerRadius={80} paddingAngle={4} dataKey="value">
                 {pieData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
               </Pie>
-              <Tooltip />
+              <Tooltip contentStyle={{ background: 'hsl(228 16% 10%)', border: '1px solid hsl(228 12% 16%)', borderRadius: '12px', color: 'hsl(210 20% 92%)' }} />
             </PieChart>
           </ResponsiveContainer>
-          <div className="mt-2 space-y-1">
+          <div className="mt-2 space-y-1.5">
             {pieData.map((d, i) => (
               <div key={d.name} className="flex items-center gap-2 font-body text-sm">
                 <div className="h-2.5 w-2.5 rounded-full" style={{ background: COLORS[i] }} />
@@ -115,12 +116,12 @@ const AdminDashboard = () => {
 
       {/* Recent bookings */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-        <Card className="mt-6 glass border-border/50 p-5 shadow-elevated noise">
+        <Card className="mt-6 glass-dark border-border/30 p-5 shadow-elevated">
           <h3 className="mb-4 font-sans font-semibold text-foreground">Recent Bookings</h3>
           <div className="overflow-x-auto">
             <table className="w-full font-body text-sm">
               <thead>
-                <tr className="border-b border-border/50 text-left text-muted-foreground">
+                <tr className="border-b border-border/30 text-left text-muted-foreground">
                   <th className="pb-3 font-medium">Customer</th>
                   <th className="pb-3 font-medium">Service</th>
                   <th className="pb-3 font-medium">Date</th>
@@ -130,13 +131,13 @@ const AdminDashboard = () => {
               </thead>
               <tbody>
                 {bookings.slice(0, 5).map((b: any) => (
-                  <tr key={b.id} className="border-b border-border/30 last:border-0">
+                  <tr key={b.id} className="border-b border-border/20 last:border-0 hover:bg-secondary/30 transition-colors">
                     <td className="py-3 text-foreground">{(b.profiles as any)?.name || 'Unknown'}</td>
                     <td className="py-3 text-foreground">{(b.services as any)?.name || 'Unknown'}</td>
                     <td className="py-3 text-muted-foreground">{b.scheduled_date}</td>
                     <td className="py-3 font-medium text-foreground">₹{b.price}</td>
                     <td className="py-3">
-                      <span className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
+                      <span className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
                         b.status === 'completed' ? 'bg-success/10 text-success' :
                         b.status === 'pending' ? 'bg-warning/10 text-warning' :
                         b.status === 'in_progress' ? 'bg-primary/10 text-primary' :
