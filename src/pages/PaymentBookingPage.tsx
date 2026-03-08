@@ -365,7 +365,7 @@ const PaymentBookingPage = () => {
                     {processing ? (
                       <span className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Processing...</span>
                     ) : (
-                      <>Pay &#8377;{total}</>
+                      <>Pay Rs. {total}</>
                     )}
                   </Button>
 
