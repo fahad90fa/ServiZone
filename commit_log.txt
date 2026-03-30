@@ -57,3 +57,4 @@
 - [2026-03-30 13:37:36] minor fixes
 - [2026-03-30 13:37:36] performance improvement
 - [2026-03-30 13:37:37] cleaned up code
+- [2026-03-30 13:37:38] improved security
