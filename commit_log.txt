@@ -480,3 +480,4 @@
 - [2026-04-14 00:14:26] updated dependencies
 - [2026-04-14 00:14:26] improved security
 - [2026-04-14 00:14:26] enhanced features
+- [2026-04-14 00:14:26] code cleanup
